@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover"
+    />
+    <title>Haunt Kit — iPhone Sensor Test</title>
+    <link rel="stylesheet" href="./src/style.css" />
+  </head>
+  <body>
+    <div id="app">
+      <header class="app-header">
+        <div class="logo-badge">👻 HAUNT KIT SPIKE</div>
+        <h1>iPhone Sensor Test</h1>
+        <p class="subtitle">Motion, Orientation, Loudness & Wake Lock Telemetry</p>
+      </header>
+
+      <!-- Warnings / Diagnostic alerts -->
+      <div id="security-warning" class="alert alert-warning" style="display: none;">
+        <strong>⚠️ Insecure Context Detected</strong>
+        <p>iOS Safari requires HTTPS to access motion sensors and the microphone.</p>
+        <p class="tip">Run: <code>cloudflared tunnel --url http://localhost:5173</code> to test over HTTPS.</p>
+      </div>
+
+      <div id="status-banner" class="alert alert-info">
+        Tap <strong>Start Sensors</strong> to grant motion and mic permissions.
+      </div>
+
+      <!-- Action Area -->
+      <section class="action-card">
+        <button id="btn-start" class="btn btn-primary btn-large">
+          ▶ Start Sensors
+        </button>
+
+        <div class="system-pills">
+          <span id="pill-secure" class="pill pill-dim">HTTPS: checking...</span>
+          <span id="pill-motion" class="pill pill-dim">Motion: idle</span>
+          <span id="pill-mic" class="pill pill-dim">Mic: idle</span>
+          <span id="pill-wakelock" class="pill pill-dim">Wake Lock: idle</span>
+          <span id="pill-hz" class="pill pill-accent">0.0 Hz</span>
+        </div>
+      </section>
+
+      <!-- Recording Section -->
+      <section class="card recording-card">
+        <h2>Ghost Recording (5s Sample)</h2>
+        <p class="hint">Record a 5-second sample and export as JSON conforming to <code>@haunt-kit/protocol</code>.</p>
+        <div class="recording-controls">
+          <label for="record-label" class="form-label">Recording Label:</label>
+          <input
+            id="record-label"
+            type="text"
+            class="form-input"
+            value="table-flat"
+            placeholder="e.g. table-flat, shoulder-raise, shake"
+          />
+          <button id="btn-record" class="btn btn-record" disabled>
+            ⏺ Record 5 s
+          </button>
+        </div>
+        <div id="record-progress-container" class="progress-bar-container" style="display: none;">
+          <div id="record-progress-bar" class="progress-bar"></div>
+        </div>
+        <div id="record-status" class="record-status-text"></div>
+      </section>
+
+      <!-- Live Telemetry Section -->
+      <div class="grid telemetry-grid">
+        <!-- Acceleration with Gravity -->
+        <section class="card telemetry-card">
+          <div class="card-title">Acceleration + Gravity (m/s²)</div>
+          <div class="readout-row">
+            <span class="readout-label">ax:</span>
+            <span id="val-ax" class="readout-val">0.00</span>
+          </div>
+          <div class="readout-row">
+            <span class="readout-label">ay:</span>
+            <span id="val-ay" class="readout-val">0.00</span>
+          </div>
+          <div class="readout-row">
+            <span class="readout-label">az:</span>
+            <span id="val-az" class="readout-val">0.00</span>
+          </div>
+        </section>
+
+        <!-- Linear Acceleration -->
+        <section class="card telemetry-card">
+          <div class="card-title">Linear Acceleration (m/s²)</div>
+          <div class="readout-row">
+            <span class="readout-label">x:</span>
+            <span id="val-lx" class="readout-val">0.00</span>
+          </div>
+          <div class="readout-row">
+            <span class="readout-label">y:</span>
+            <span id="val-ly" class="readout-val">0.00</span>
+          </div>
+          <div class="readout-row">
+            <span class="readout-label">z:</span>
+            <span id="val-lz" class="readout-val">0.00</span>
+          </div>
+        </section>
+
+        <!-- Rotation Rate -->
+        <section class="card telemetry-card">
+          <div class="card-title">Rotation Rate (deg/s)</div>
+          <div class="readout-row">
+            <span class="readout-label">α (yaw):</span>
+            <span id="val-gx" class="readout-val">0.00</span>
+          </div>
+          <div class="readout-row">
+            <span class="readout-label">β (pitch):</span>
+            <span id="val-gy" class="readout-val">0.00</span>
+          </div>
+          <div class="readout-row">
+            <span class="readout-label">γ (roll):</span>
+            <span id="val-gz" class="readout-val">0.00</span>
+          </div>
+        </section>
+
+        <!-- Device Orientation -->
+        <section class="card telemetry-card">
+          <div class="card-title">Device Orientation (deg)</div>
+          <div class="readout-row">
+            <span class="readout-label">α (compass):</span>
+            <span id="val-oa" class="readout-val">0.00°</span>
+          </div>
+          <div class="readout-row">
+            <span class="readout-label">β (pitch):</span>
+            <span id="val-ob" class="readout-val">0.00°</span>
+          </div>
+          <div class="readout-row">
+            <span class="readout-label">γ (roll):</span>
+            <span id="val-og" class="readout-val">0.00°</span>
+          </div>
+        </section>
+
+        <!-- Microphone Loudness -->
+        <section class="card telemetry-card telemetry-card-wide">
+          <div class="card-title">Microphone Loudness (RMS 0..1)</div>
+          <div class="loudness-meter-wrapper">
+            <div class="meter-bar-track">
+              <div id="meter-bar-fill" class="meter-bar-fill"></div>
+            </div>
+            <div class="loudness-label">
+              <span id="val-rms" class="readout-val">0.000</span>
+              <span class="meter-note">Raw audio never leaves phone</span>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <footer class="app-footer">
+        <p>Haunt Kit Hackathon Spike • Kiroween 2026 • Task A1</p>
+      </footer>
+    </div>
+    <script type="module" src="./src/main.ts"></script>
+  </body>
+</html>
