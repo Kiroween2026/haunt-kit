@@ -1,42 +1,60 @@
 // Owner: Yadnesh. Shared message contract between phone controller, relay and host apps.
-//
-// FROZEN CONTRACT: Sample, GestureEvent and Detector below must not change without
-// agreement from all three owners (Yadnesh, Viviana, Anish). See .kiro/steering/structure.md.
+// Changes need all three owners to agree. See .kiro/steering/protocol.md.
 
-export const PROTOCOL_VERSION = 1;
+export { PROTOCOL_VERSION } from "./types";
+export type { Sample, GestureEvent, Detector } from "./types";
 
-/**
- * One sensor reading from a phone.
- * Units: acceleration m/s² (including gravity), rotation rate deg/s,
- * orientation degrees, t in ms, rms 0..1 (mic loudness computed on the phone).
- */
-export type Sample = {
-  t: number;
-  ax: number;
-  ay: number;
-  az: number;
-  gx: number;
-  gy: number;
-  gz: number;
-  alpha: number;
-  beta: number;
-  gamma: number;
-  rms?: number;
-};
+export {
+  MAX_MESSAGE_BYTES,
+  ProtocolError,
+  byteLength,
+  createChannel,
+  hostToRelay,
+  phoneToRelay,
+  relayToHost,
+  relayToPhone,
+} from "./codec";
+export type {
+  Channel,
+  DecodeResult,
+  ErrorCode,
+  HostToRelayMessage,
+  PhoneToRelayMessage,
+  RelayToHostMessage,
+  RelayToPhoneMessage,
+} from "./codec";
 
-/** A detected gesture. t is in ms, on the same clock as the samples that produced it. */
-export type GestureEvent = {
-  name: string;
-  t: number;
-  data?: Record<string, number>;
-};
+export {
+  CONTROL_VIEWS,
+  ERROR_CODES,
+  MAX_SAMPLES_PER_BATCH,
+  colorSchema,
+  deviceSchema,
+  errorCodeSchema,
+  feedbackSchema,
+  gestureEventSchema,
+  hostToRelaySchemas,
+  hostTokenSchema,
+  phoneToRelaySchemas,
+  playerIdSchema,
+  playerInfoSchema,
+  playerNameSchema,
+  relayToHostSchemas,
+  relayToPhoneSchemas,
+  roomCodeSchema,
+  sampleSchema,
+  targetSchema,
+  uiViewSchema,
+} from "./schemas";
 
-/** A pure gesture detector. No browser APIs, so it runs on the phone and in tests. */
-export interface Detector<Config> {
-  name: string;
-  defaults: Config;
-  create(config: Config): {
-    push(s: Sample): GestureEvent[];
-    reset(): void;
-  };
-}
+export type { ControlView, Device, Feedback, PlayerInfo, Target, UiView } from "./schemas";
+
+export {
+  ROOM_CODE_ALPHABET,
+  ROOM_CODE_LENGTH,
+  ROOM_CODE_PATTERN,
+  generateRoomCode,
+  isRoomCode,
+  normalizeRoomCode,
+} from "./room-code";
+export type { RandomBytes } from "./room-code";
