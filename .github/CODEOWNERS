@@ -1,18 +1,23 @@
 # Each folder's owner is asked to review changes to it.
-# TODO: replace VIVIANA_GH and ANISH_GH with their GitHub usernames, then uncomment those lines.
+# The last matching line wins, so specific folders come after the catch-all.
 
 *                       @yashpy
 
-/packages/protocol/     @yashpy
+# Yadnesh: platform
 /packages/relay/        @yashpy
 /packages/controller/   @yashpy
 /packages/host-sdk/     @yashpy
 /packages/mcp-server/   @yashpy
 /.github/               @yashpy
 
-# /packages/protocol/   @yashpy @VIVIANA_GH @ANISH_GH
-# /packages/ui/         @VIVIANA_GH
-# /apps/seance-party/   @VIVIANA_GH
-# /packages/gestures/   @ANISH_GH
-# /recordings/          @ANISH_GH
-# /apps/steady/         @ANISH_GH
+# Shared contract: all three owners review
+/packages/protocol/     @yashpy @VIVIANAPLATA16 @anishpant79-code
+
+# Viviana: design and Séance Party
+/packages/ui/           @VIVIANAPLATA16
+/apps/seance-party/     @VIVIANAPLATA16
+
+# Anish: gestures and Steady
+/packages/gestures/     @anishpant79-code
+/recordings/            @anishpant79-code
+/apps/steady/           @anishpant79-code
