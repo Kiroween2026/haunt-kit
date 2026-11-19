@@ -24,10 +24,15 @@ export const sampleSchema = z.object({
   rms: finite.min(0).max(1).optional(),
 });
 
+/** Gesture data keys: a letter, then up to 39 letters, digits or underscores. */
+export const GESTURE_DATA_KEY = /^[A-Za-z][A-Za-z0-9_]{0,39}$/;
+
 export const gestureEventSchema = z.object({
   name: z.string().min(1).max(40),
   t: finite,
-  data: z.record(z.string().max(40), finite).optional(),
+  // Keys must start with a letter. This rejects "__proto__", which zod would otherwise drop
+  // silently (prototype-pollution guard), changing the message between phone and host.
+  data: z.record(z.string().regex(GESTURE_DATA_KEY), finite).optional(),
 });
 
 // Compile-time guard: the zod types must equal the frozen contract types.

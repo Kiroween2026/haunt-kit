@@ -156,6 +156,24 @@ describe("bad input", () => {
   });
 });
 
+describe("gesture data keys", () => {
+  // Found by the round-trip property in CI: data {"__proto__": 0} decoded as {}, because zod
+  // drops that key. Such keys are now rejected instead of silently changed.
+  it.each(["__proto__", "_x", "1st", "", "a-b", "x".repeat(41)])("rejects the key %j", (key) => {
+    const raw = `{"v":1,"type":"gesture","event":{"name":"shake","t":0,"data":{${JSON.stringify(key)}:1}}}`;
+    expect(phoneToRelay.decode(raw)).toMatchObject({ ok: false, error: { code: "bad_message" } });
+  });
+
+  it("accepts normal keys", () => {
+    const m = {
+      v: 1,
+      type: "gesture",
+      event: { name: "flick", t: 0, data: { dx: 1, strength_2: 0.5 } },
+    } as const;
+    expect(phoneToRelay.decode(JSON.stringify(m))).toEqual({ ok: true, message: m });
+  });
+});
+
 describe("no player spoofing", () => {
   it("drops any playerId a phone puts on its frames or gestures", () => {
     const phoneInput = fc.oneof(

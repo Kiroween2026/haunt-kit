@@ -38,6 +38,7 @@ if (result.message.type === "gesture") {
 - A `sensor_frames` batch holds 1 to 32 samples (`MAX_SAMPLES_PER_BATCH`). At 30 Hz, send a batch at least once a second.
 - Room codes: 4 letters from `ABCDEFGHJKMNPQRSTUVWXYZ`. Create them with `generateRoomCode()`. Clean typed input with `normalizeRoomCode()`.
 - `hostToken` is a secret. Never log it.
+- Gesture `data` keys start with a letter, then letters, digits or `_` (max 40). `__proto__` is rejected.
 - Control views for the `ui` message: `tilt`, `still`, `scream`, `tap`, `wait`.
 
 Spec: `.kiro/specs/protocol/`.

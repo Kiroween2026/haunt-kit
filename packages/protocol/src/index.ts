@@ -27,6 +27,7 @@ export type {
 export {
   CONTROL_VIEWS,
   ERROR_CODES,
+  GESTURE_DATA_KEY,
   MAX_SAMPLES_PER_BATCH,
   colorSchema,
   deviceSchema,

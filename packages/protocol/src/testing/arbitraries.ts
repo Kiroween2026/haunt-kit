@@ -42,11 +42,19 @@ export const sampleArb: fc.Arbitrary<Sample> = fc.record(
   { requiredKeys: ["t", "ax", "ay", "az", "gx", "gy", "gz", "alpha", "beta", "gamma"] },
 );
 
+const keyChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_";
+export const dataKeyArb = fc
+  .tuple(
+    fc.constantFrom(..."ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"),
+    fc.array(fc.constantFrom(...keyChars), { maxLength: 39 }),
+  )
+  .map(([first, rest]) => first + rest.join(""));
+
 export const gestureEventArb: fc.Arbitrary<GestureEvent> = fc.record(
   {
     name: fc.string({ minLength: 1, maxLength: 40 }),
     t: finiteArb,
-    data: fc.dictionary(fc.string({ maxLength: 40 }), finiteArb, { maxKeys: 8 }),
+    data: fc.dictionary(dataKeyArb, finiteArb, { maxKeys: 8 }),
   },
   { requiredKeys: ["name", "t"] },
 );
