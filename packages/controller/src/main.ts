@@ -4,7 +4,6 @@
 import "./styles.css";
 import type { ControlView, Feedback, UiView } from "@haunt-kit/protocol";
 import {
-  FrameBatcher,
   KeepAwake,
   MicMeter,
   MotionSampler,
@@ -15,6 +14,8 @@ import {
 } from "@haunt-kit/host-sdk";
 import { normalizeRoomCode } from "@haunt-kit/protocol";
 import { PhoneClient, type PhoneStatus } from "./client";
+import { PHONE_DETECTORS } from "./detectors";
+import { InputPipeline } from "./pipeline";
 import { cleanName, isSecure, resolveRelayUrl, roomFromUrl } from "./config";
 import { playSound, unlockAudio } from "./sound";
 
@@ -30,7 +31,8 @@ let loop: ReturnType<typeof setInterval> | null = null;
 let view: UiView = { view: "wait" };
 let lastSample: { beta: number; gamma: number; rms: number } = { beta: 0, gamma: 0, rms: 0 };
 const awake = new KeepAwake();
-const batcher = new FrameBatcher();
+const forceRaw = new URLSearchParams(location.search).get("raw") === "1";
+const pipeline = new InputPipeline(PHONE_DETECTORS, forceRaw);
 
 // ---------- tiny DOM helper ----------
 
@@ -264,6 +266,7 @@ function afterPermissions(access: SensorAccess, roomCode: string, name: string) 
   client.on("status", statusScreen);
   client.on("ui", (ui) => {
     view = ui;
+    pipeline.setView(ui.view);
     renderView();
   });
   client.on("feedback", onFeedback);
@@ -278,14 +281,16 @@ function afterPermissions(access: SensorAccess, roomCode: string, name: string) 
 
 function startSampling() {
   stopSampling();
+  pipeline.setView(view.view);
   loop = setInterval(() => {
     const t = performance.now();
     const rms = mic?.rms();
     const s = sampler?.read(t, rms);
     if (!s) return;
     lastSample = { beta: s.beta, gamma: s.gamma, rms: s.rms ?? 0 };
-    const batch = batcher.push(s, t);
-    if (batch) client?.sendFrames(batch);
+    const out = pipeline.push(s, t);
+    if (out.frames) client?.sendFrames(out.frames);
+    for (const g of out.gestures) client?.sendGesture(g);
     drawLocal();
   }, 1000 / SAMPLE_HZ);
 }
@@ -293,7 +298,7 @@ function startSampling() {
 function stopSampling() {
   if (loop) clearInterval(loop);
   loop = null;
-  batcher.clear();
+  pipeline.setView("wait");
 }
 
 /** Local echo so the player sees their own input right away. */
