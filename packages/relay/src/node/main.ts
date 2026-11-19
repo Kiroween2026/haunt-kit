@@ -16,7 +16,13 @@ const relay = await startNodeRelay({
 console.log(
   `Haunt Kit relay on ${relay.wsUrl}  (admin API for the Séance MCP: ${relay.adminEnabled ? "on" : "off"})`,
 );
-if (!relay.adminEnabled && !production) console.log("Run `pnpm dev:token` once to turn on the admin API.");
+if (!relay.adminEnabled && !production) {
+  console.log(
+    token
+      ? "Admin API is off because HOST is not loopback."
+      : "Run `pnpm dev:token` once to turn on the admin API.",
+  );
+}
 
 const stop = () => relay.close().then(() => process.exit(0));
 process.on("SIGINT", stop);

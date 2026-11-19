@@ -17,12 +17,15 @@ export default defineConfig({
       url: "http://localhost:5180/sim.html",
       reuseExistingServer: !process.env.CI,
     },
+    { command: "pnpm dev:demo", url: "http://localhost:5181/", reuseExistingServer: !process.env.CI },
   ],
   projects: [
     {
       name: "chromium",
       use: {
         ...devices["Desktop Chrome"],
+        // Chrome now has DeviceMotionEvent.requestPermission too; without these it answers "denied".
+        permissions: ["accelerometer", "gyroscope", "magnetometer", "microphone"],
         launchOptions: { args: ["--use-fake-ui-for-media-stream", "--use-fake-device-for-media-stream"] },
       },
     },

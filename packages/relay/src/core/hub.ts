@@ -30,6 +30,8 @@ export type HubOptions = {
 
 export class RelayHub {
   private readonly rooms = new Map<string, Entry>();
+  /** Rooms that don't exist, kept only while a connection to them is open (so it can time out). */
+  private readonly detachedEntries = new Set<Entry>();
 
   constructor(private readonly opts: HubOptions = {}) {}
 
@@ -96,8 +98,9 @@ export class RelayHub {
 
   /** Closes all timers. For tests and shutdown. */
   dispose(): void {
-    for (const e of this.rooms.values()) if (e.timer) clearTimeout(e.timer);
+    for (const e of [...this.rooms.values(), ...this.detachedEntries]) if (e.timer) clearTimeout(e.timer);
     this.rooms.clear();
+    this.detachedEntries.clear();
   }
 
   private makeEntry(code: string): Entry {
@@ -111,17 +114,20 @@ export class RelayHub {
 
   /** A room that isn't registered: joins fail with room_not_found, resumes with not_allowed. */
   private detached(code: string): Entry {
-    return this.makeEntry(code);
+    const entry = this.makeEntry(code);
+    this.detachedEntries.add(entry);
+    return entry;
   }
 
   private attach(entry: Entry, conn: Conn, meta: SocketMeta): HubConnection {
     const socket: RoomSocket = {
       key: {},
-      meta,
+      meta: { ...meta, since: Date.now() },
       send: (text) => conn.send(text),
       close: (code, reason) => conn.close(code, reason),
     };
     entry.sockets.add(socket);
+    this.afterEvent(entry); // schedules the join timeout
     let open = true;
     return {
       message: (raw) => {
@@ -134,6 +140,7 @@ export class RelayHub {
         open = false;
         entry.room.handleClose(socket);
         entry.sockets.delete(socket);
+        if (entry.sockets.size === 0) this.detachedEntries.delete(entry);
         this.afterEvent(entry);
       },
     };
@@ -142,14 +149,14 @@ export class RelayHub {
   private afterEvent(entry: Entry): void {
     const { room } = entry;
     const registered = this.rooms.get(room.code) === entry;
-    if (!registered) return;
-    if (room.state.closed || (!room.state.created && entry.sockets.size === 0)) {
+    if (registered && (room.state.closed || (!room.state.created && entry.sockets.size === 0))) {
       if (entry.timer) clearTimeout(entry.timer);
       this.rooms.delete(room.code);
       return;
     }
     if (entry.timer) clearTimeout(entry.timer);
     entry.timer = null;
+    if (!registered && entry.sockets.size === 0) return;
     const next = room.nextAlarm();
     if (next !== null) {
       entry.timer = setTimeout(

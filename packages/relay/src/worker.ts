@@ -114,8 +114,9 @@ export class RoomObject {
     const client = pair[0];
     const server = pair[1];
     this.ctx.acceptWebSocket(server);
+    const since = Date.now();
     const meta: SocketMeta =
-      role === "host" ? { role: "host", authed: false } : { role: "player", playerId: null };
+      role === "host" ? { role: "host", authed: false, since } : { role: "player", playerId: null, since };
     server.serializeAttachment(meta);
     await this.save();
     return new Response(null, { status: 101, webSocket: client } as ResponseInit & {

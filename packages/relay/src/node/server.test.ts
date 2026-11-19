@@ -1,4 +1,4 @@
-import { afterEach, describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import { startNodeRelay, type NodeRelay } from "./server";
 import { smokeTest } from "./smoke";
 
@@ -47,5 +47,27 @@ describe("Node relay over real WebSockets", () => {
       ws.onerror = () => r("error");
     });
     expect(result).toBe("error");
+  });
+});
+
+describe("security", () => {
+  it("never enables admin on a non-loopback host, even with a token", async () => {
+    relay = await startNodeRelay({ port: 0, host: "0.0.0.0", devToken: TOKEN });
+    expect(relay.adminEnabled).toBe(false);
+  });
+
+  it("closes a WebSocket that never joins (join timeout)", async () => {
+    vi.useFakeTimers({ toFake: ["setTimeout", "clearTimeout", "Date"] });
+    try {
+      relay = await startNodeRelay({ port: 0 });
+      const ws = new WebSocket(`${relay.wsUrl}/join?room=ABCD`);
+      const code = new Promise<number>((r) => (ws.onclose = (e) => r(e.code)));
+      await new Promise<void>((r) => (ws.onopen = () => r()));
+      await vi.advanceTimersByTimeAsync(10_500);
+      vi.useRealTimers();
+      expect(await code).toBe(4008);
+    } finally {
+      vi.useRealTimers();
+    }
   });
 });

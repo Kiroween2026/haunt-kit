@@ -27,7 +27,9 @@ export type NodeRelay = {
 };
 
 export async function startNodeRelay(opts: NodeRelayOptions = {}): Promise<NodeRelay> {
-  const adminEnabled = !opts.production && !!opts.devToken && opts.devToken.length >= 16;
+  // The admin API only runs on loopback: never reachable from the network, even with a token.
+  const adminEnabled =
+    !opts.production && isLoopback(opts.host ?? "127.0.0.1") && !!opts.devToken && opts.devToken.length >= 16;
   const hub = new RelayHub({ sampleBufferSize: adminEnabled ? (opts.sampleBufferSize ?? 1800) : 0 });
   // Allow a bit over the protocol limit so oversized messages reach decode() and get a too_large error.
   const wss = new WebSocketServer({ noServer: true, maxPayload: MAX_MESSAGE_BYTES * 4 });
@@ -118,6 +120,10 @@ export async function startNodeRelay(opts: NodeRelayOptions = {}): Promise<NodeR
       await new Promise<void>((resolve) => server.close(() => resolve()));
     },
   };
+}
+
+export function isLoopback(host: string): boolean {
+  return host === "localhost" || host === "::1" || /^127\./.test(host);
 }
 
 function rawToString(data: RawData): string {

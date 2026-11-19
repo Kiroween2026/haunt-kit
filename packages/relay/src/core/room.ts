@@ -20,6 +20,8 @@ import { randomId, safeEqual } from "./ids";
 export const PLAYER_GRACE_MS = 60_000;
 /** A room without its host stays open this long. */
 export const HOST_GRACE_MS = 120_000;
+/** A connection must join (phone) or create/resume (host) within this time, or it's closed. */
+export const JOIN_TIMEOUT_MS = 10_000;
 /** Messages per second per connection. */
 export const RATE_LIMIT_PER_SECOND = 60;
 export const MAX_PLAYERS = 8;
@@ -42,10 +44,17 @@ export const CLOSE = {
   notAllowed: 4003,
   roomNotFound: 4004,
   roomFull: 4005,
+  joinTimeout: 4008,
 } as const;
 
+/** `since` is when the connection opened; used to close connections that never join. */
 export type SocketMeta =
-  { role: "host"; authed: boolean } | { role: "player"; playerId: string | null; retired?: boolean };
+  | { role: "host"; authed: boolean; since?: number }
+  | { role: "player"; playerId: string | null; retired?: boolean; since?: number };
+
+function waitingToJoin(meta: SocketMeta): boolean {
+  return meta.role === "host" ? !meta.authed : meta.playerId === null && !meta.retired;
+}
 
 /** One connection as the room sees it. `meta` must survive hibernation (serializeAttachment). */
 export interface RoomSocket {
@@ -150,7 +159,11 @@ export class Room {
     const consider = (t: number) => {
       if (next === null || t < next) next = t;
     };
-    if (this.state.closed) return null;
+    for (const sock of this.opts.sockets()) {
+      if (waitingToJoin(sock.meta) && sock.meta.since !== undefined)
+        consider(sock.meta.since + JOIN_TIMEOUT_MS);
+    }
+    if (this.state.closed) return next;
     for (const p of this.state.players) {
       if (!p.connected && p.disconnectedAt !== null) consider(p.disconnectedAt + PLAYER_GRACE_MS);
     }
@@ -160,8 +173,19 @@ export class Room {
 
   /** Frees expired player slots and closes the room if the host has been gone too long. */
   alarm(): void {
-    if (this.state.closed) return;
     const now = this.now();
+    for (const sock of this.opts.sockets()) {
+      const since = sock.meta.since;
+      if (waitingToJoin(sock.meta) && since !== undefined && now - since >= JOIN_TIMEOUT_MS) {
+        // Mark it first so its close event does nothing, then close.
+        sock.meta =
+          sock.meta.role === "host"
+            ? { role: "host", authed: false }
+            : { role: "player", playerId: null, retired: true };
+        sock.close(CLOSE.joinTimeout, "join timeout");
+      }
+    }
+    if (this.state.closed) return;
     const expired = this.state.players.filter(
       (p) => !p.connected && p.disconnectedAt !== null && now - p.disconnectedAt >= PLAYER_GRACE_MS,
     );

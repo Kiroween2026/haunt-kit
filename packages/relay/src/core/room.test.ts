@@ -9,6 +9,7 @@ import {
 import {
   CLOSE,
   HOST_GRACE_MS,
+  JOIN_TIMEOUT_MS,
   MAX_PLAYERS,
   PLAYER_COLORS,
   PLAYER_GRACE_MS,
@@ -465,5 +466,39 @@ describe("memory relay", () => {
       t.onclose = () => resolve();
     });
     expect(got.map((m) => JSON.parse(m).code)).toEqual(["room_not_found"]);
+  });
+});
+
+describe("join timeout", () => {
+  const withSince = (h: Harness, meta: SocketMeta) => {
+    const s = new FakeSocket({ ...meta, since: h.time });
+    h.sockets.add(s);
+    return s;
+  };
+
+  it("closes a phone that connects but never joins, after 10 s", () => {
+    const h = new Harness();
+    h.createdHost();
+    const idle = withSince(h, { role: "player", playerId: null });
+    h.advance(JOIN_TIMEOUT_MS - 1);
+    expect(idle.closedWith).toBeNull();
+    h.advance(1);
+    expect(idle.closedWith).toBe(CLOSE.joinTimeout);
+  });
+
+  it("closes a host connection that never creates or resumes", () => {
+    const h = new Harness();
+    const idle = withSince(h, { role: "host", authed: false });
+    h.advance(JOIN_TIMEOUT_MS);
+    expect(idle.closedWith).toBe(CLOSE.joinTimeout);
+  });
+
+  it("never closes a phone that joined in time", () => {
+    const h = new Harness();
+    h.createdHost();
+    const p = withSince(h, { role: "player", playerId: null });
+    h.send(p, { type: "join", roomCode: "ABCD", name: "A", device });
+    h.advance(JOIN_TIMEOUT_MS * 20);
+    expect(p.closedWith).toBeNull();
   });
 });
