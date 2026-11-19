@@ -1,21 +1,33 @@
 import { describe, expect, it } from "vitest";
 import {
+  DEFAULT_HOLD_STILL_CONFIG,
+  DEFAULT_SHAKE_CONFIG,
+  DEFAULT_TILT_CONFIG,
   PACKAGE_NAME,
   RECORDING_OS,
   RecordingMetaSchema,
   RecordingSchema,
   ReplayPlayer,
   createGhostPlayer,
+  createHoldStillDetector,
+  createShakeDetector,
+  createTiltDetector,
+  holdStillDetector,
   recordingMetaSchema,
   recordingSchema,
   sampleSchema,
+  shakeDetector,
+  tiltDetector,
   type GhostPlayerAdapter,
   type GhostPlayerOptions,
   type GhostRecording,
+  type HoldStillConfig,
   type PlayRealtimeOptions,
   type RecordingMeta,
   type RecordingOS,
   type Sample,
+  type ShakeConfig,
+  type TiltConfig,
 } from "./index";
 
 describe("@haunt-kit/gestures public exports", () => {
@@ -122,5 +134,73 @@ describe("@haunt-kit/gestures public exports", () => {
     expect(adapter.id).toBe("ghost-export-1");
     expect(adapter.name).toBe("Public Export Bot");
     expect(adapter.isPlaying).toBe(false);
+  });
+
+  it("exports tilt detector, factory and default config", () => {
+    expect(tiltDetector).toBeDefined();
+    expect(tiltDetector.name).toBe("tilt");
+    expect(tiltDetector.defaults).toEqual(DEFAULT_TILT_CONFIG);
+    expect(createTiltDetector).toBeDefined();
+
+    const instance = createTiltDetector();
+    const events = instance.push({
+      t: 100,
+      ax: 0,
+      ay: 0,
+      az: 9.81,
+      gx: 0,
+      gy: 0,
+      gz: 0,
+      alpha: 0,
+      beta: 0,
+      gamma: 0,
+    });
+    expect(events).toHaveLength(1);
+    expect(events[0]!.name).toBe("tilt");
+    expect(events[0]!.data).toEqual({ x: 0, y: 0 });
+  });
+
+  it("exports shake detector, factory and default config", () => {
+    expect(shakeDetector).toBeDefined();
+    expect(shakeDetector.name).toBe("shake");
+    expect(shakeDetector.defaults).toEqual(DEFAULT_SHAKE_CONFIG);
+    expect(createShakeDetector).toBeDefined();
+
+    const instance = createShakeDetector();
+    const noEvents = instance.push({
+      t: 100,
+      ax: 0,
+      ay: 0,
+      az: 9.81,
+      gx: 0,
+      gy: 0,
+      gz: 0,
+      alpha: 0,
+      beta: 0,
+      gamma: 0,
+    });
+    expect(noEvents).toHaveLength(0);
+  });
+
+  it("exports hold-still detector, factory and default config", () => {
+    expect(holdStillDetector).toBeDefined();
+    expect(holdStillDetector.name).toBe("hold-still");
+    expect(holdStillDetector.defaults).toEqual(DEFAULT_HOLD_STILL_CONFIG);
+    expect(createHoldStillDetector).toBeDefined();
+
+    const instance = createHoldStillDetector();
+    const noEvents = instance.push({
+      t: 100,
+      ax: 0,
+      ay: 0,
+      az: 9.81,
+      gx: 0,
+      gy: 0,
+      gz: 0,
+      alpha: 0,
+      beta: 0,
+      gamma: 0,
+    });
+    expect(noEvents).toHaveLength(0);
   });
 });
