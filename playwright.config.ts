@@ -10,14 +10,28 @@ export default defineConfig({
   retries: process.env.CI ? 1 : 0,
   reporter: process.env.CI ? [["list"], ["html", { open: "never" }]] : "list",
   use: { trace: "retain-on-failure" },
+  // Servers run as plain `node` processes (no pnpm wrapper) so they stop cleanly when the
+  // tests end. Through `pnpm`, CI once finished all tests and then hung waiting for them.
+  globalTimeout: 10 * 60_000,
   webServer: [
-    { command: "pnpm dev:relay", url: "http://127.0.0.1:8787/health", reuseExistingServer: !process.env.CI },
     {
-      command: "pnpm --filter @haunt-kit/controller dev",
+      command: "node --import tsx packages/relay/src/node/main.ts",
+      url: "http://127.0.0.1:8787/health",
+      reuseExistingServer: !process.env.CI,
+      gracefulShutdown: { signal: "SIGTERM", timeout: 5000 },
+    },
+    {
+      command: "node packages/controller/node_modules/vite/bin/vite.js packages/controller",
       url: "http://localhost:5180/sim.html",
       reuseExistingServer: !process.env.CI,
+      gracefulShutdown: { signal: "SIGTERM", timeout: 5000 },
     },
-    { command: "pnpm dev:demo", url: "http://localhost:5181/", reuseExistingServer: !process.env.CI },
+    {
+      command: "node packages/host-sdk/node_modules/vite/bin/vite.js packages/host-sdk/demo",
+      url: "http://localhost:5181/",
+      reuseExistingServer: !process.env.CI,
+      gracefulShutdown: { signal: "SIGTERM", timeout: 5000 },
+    },
   ],
   projects: [
     {
