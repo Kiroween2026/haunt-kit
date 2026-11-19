@@ -19,7 +19,8 @@
     "dev:token": "tsx packages/relay/src/node/make-token.ts",
     "dev:controller": "pnpm --filter @haunt-kit/controller dev",
     "dev:demo": "pnpm --filter @haunt-kit/host-sdk demo",
-    "e2e": "playwright test"
+    "e2e": "playwright test",
+    "check:submission": "tsx scripts/check-submission.ts"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
