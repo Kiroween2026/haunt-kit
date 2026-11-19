@@ -8,6 +8,7 @@
     "typecheck": "tsc -p tsconfig.json"
   },
   "dependencies": {
-    "@haunt-kit/protocol": "workspace:*"
+    "@haunt-kit/protocol": "workspace:*",
+    "zod": "^4.6.7"
   }
 }
