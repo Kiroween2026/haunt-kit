@@ -1,4 +1,4 @@
-// Owner: Yadnesh. Cloudflare Worker + Durable Object relay between phones and host apps.
-// Only Yadnesh changes this package. Ask the owner before editing (see .kiro/steering/structure.md).
+// Owner: Yadnesh. Relay between phones and host apps.
+// Browser-safe core only. Node relay: "@haunt-kit/relay/node". Cloudflare Worker: src/worker.ts.
 
-export const PACKAGE_NAME = "@haunt-kit/relay";
+export * from "./core/index";

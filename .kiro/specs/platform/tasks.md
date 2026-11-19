@@ -2,13 +2,13 @@
 
 ## Relay (Wed Nov 18)
 
-- [ ] 1. `Room` core: create/resume, join/rejoin, forwarding with sender id, feedback/ui routing, ping/pong (Req 1, 2)
-- [ ] 2. Rate limiting per socket (Req 1.10)
-- [ ] 3. Timers: 60 s player grace, 2 min host grace, `nextAlarm`/`alarm` (Req 2)
-- [ ] 4. Property tests: slot/color assignment, no crossed messages (Req 6.1, 6.2)
-- [ ] 5. `RelayHub` + in-memory transport
-- [ ] 6. Node relay (`ws`) with `/host`, `/join`, `/health`; integration test over real WebSockets (Req 3.2, 6.3)
-- [ ] 7. Cloudflare Worker + `RoomObject` Durable Object with hibernation and storage; `wrangler.toml` (Req 3.1)
+- [x] 1. `Room` core: create/resume, join/rejoin, forwarding with sender id, feedback/ui routing, ping/pong (Req 1, 2)
+- [x] 2. Rate limiting per socket (Req 1.10)
+- [x] 3. Timers: 60 s player grace, 2 min host grace, `nextAlarm`/`alarm` (Req 2)
+- [x] 4. Property tests: slot/color assignment, no crossed messages (Req 6.1, 6.2)
+- [x] 5. `RelayHub` + in-memory transport
+- [x] 6. Node relay (`ws`) with `/host`, `/join`, `/health`; integration test over real WebSockets (Req 3.2, 6.3)
+- [x] 7. Cloudflare Worker + `RoomObject` Durable Object with hibernation and storage; `wrangler.toml` (Req 3.1)
 
 ## Host SDK (Fri Nov 20)
 

@@ -14,7 +14,9 @@
     "format:check": "prettier --check .",
     "build": "pnpm -r --filter \"./apps/*\" build",
     "dev:seance": "pnpm --filter @haunt-kit/seance-party dev",
-    "dev:steady": "pnpm --filter @haunt-kit/steady dev"
+    "dev:steady": "pnpm --filter @haunt-kit/steady dev",
+    "dev:relay": "pnpm --filter @haunt-kit/relay dev",
+    "dev:token": "tsx packages/relay/src/node/make-token.ts"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
