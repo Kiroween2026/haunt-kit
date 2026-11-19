@@ -96,8 +96,18 @@ function joinScreen(error?: string) {
     error ? h("p", { class: "error", role: "alert" }, error) : null,
     button("Enter the séance", enter),
     h("p", { class: "small" }, "We use motion and loudness only. Sound never leaves your phone."),
+    simLink(roomFromLink ?? code.value),
   );
   if (!roomFromLink && !code.value) code.focus();
+}
+
+function simLink(room: string): HTMLElement {
+  const a = h(
+    "a",
+    { href: `sim.html${room ? `?room=${encodeURIComponent(room)}` : ""}`, class: "small" },
+    "Play without a phone",
+  );
+  return h("p", {}, a);
 }
 
 function insecureScreen() {

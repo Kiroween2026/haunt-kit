@@ -9,7 +9,7 @@
   "scripts": {
     "test": "vitest run",
     "lint": "eslint .",
-    "typecheck": "pnpm -r --parallel typecheck",
+    "typecheck": "pnpm -r --parallel typecheck && tsc -p e2e/tsconfig.json",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "build": "pnpm -r --filter \"./apps/*\" --filter @haunt-kit/controller build",
@@ -18,10 +18,13 @@
     "dev:relay": "pnpm --filter @haunt-kit/relay dev",
     "dev:token": "tsx packages/relay/src/node/make-token.ts",
     "dev:controller": "pnpm --filter @haunt-kit/controller dev",
-    "dev:demo": "pnpm --filter @haunt-kit/host-sdk demo"
+    "dev:demo": "pnpm --filter @haunt-kit/host-sdk demo",
+    "e2e": "playwright test"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
+    "@haunt-kit/host-sdk": "workspace:*",
+    "@playwright/test": "^1.65.1",
     "@types/node": "^26.6.6",
     "eslint": "^10.15.0",
     "eslint-config-prettier": "^10.1.8",
