@@ -53,6 +53,15 @@ room.on("gesture", ({ playerId, event }) => {
 });
 ```
 
+## Séance MCP (Kiro sees your phone)
+
+```bash
+pnpm dev:token   # once: writes HAUNT_DEV_TOKEN to .env.local (git-ignored)
+pnpm dev:relay
+```
+
+Then enable the `seance` server in Kiro's MCP panel. Kiro can list phones, read live sensor stats, record motions into `recordings/`, and replay them as fake players. See `.kiro/steering/mcp-usage.md`.
+
 ## Live staging
 
 Deployed from `main` by `.github/workflows/deploy.yml`. See [docs/DEPLOY.md](docs/DEPLOY.md). URLs appear here after the first deploy.

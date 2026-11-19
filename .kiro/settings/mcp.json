@@ -1,0 +1,13 @@
+{
+  "mcpServers": {
+    "seance": {
+      "command": "pnpm",
+      "args": ["exec", "tsx", "packages/mcp-server/src/main.ts"],
+      "env": {
+        "HAUNT_RELAY_URL": "http://127.0.0.1:8787"
+      },
+      "disabled": false,
+      "autoApprove": ["list_rooms", "list_devices", "get_sensor_snapshot"]
+    }
+  }
+}
