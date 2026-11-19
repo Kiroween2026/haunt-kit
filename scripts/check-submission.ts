@@ -74,7 +74,12 @@ check("No secrets committed", () => {
   const pattern =
     /(gh[pousr]_[A-Za-z0-9]{20,}|sk-[A-Za-z0-9]{20,}|AKIA[0-9A-Z]{16}|-----BEGIN [A-Z ]*PRIVATE KEY|HAUNT_DEV_TOKEN=(?!\$\{)[A-Za-z0-9_-]{10,}|CLOUDFLARE_API_TOKEN=\S+)/;
   const hits = tracked.filter(
-    (f) => f !== "pnpm-lock.yaml" && existsSync(f) && statSync(f).isFile() && pattern.test(read(f)),
+    (f) =>
+      f !== "pnpm-lock.yaml" &&
+      f !== "scripts/check-submission.ts" &&
+      existsSync(f) &&
+      statSync(f).isFile() &&
+      pattern.test(read(f)),
   );
   return hits.length === 0 || `possible secret in: ${hits.join(", ")}`;
 });
