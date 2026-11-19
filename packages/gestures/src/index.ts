@@ -31,3 +31,25 @@ export type {
   GhostPlayerAdapter,
   GhostPlayerOptions,
 } from "./recording/adapter";
+
+// Detectors
+export {
+  DEFAULT_TILT_CONFIG,
+  createTiltDetector,
+  tiltDetector,
+} from "./detectors/tilt";
+export type { TiltConfig } from "./detectors/tilt";
+
+export {
+  DEFAULT_SHAKE_CONFIG,
+  createShakeDetector,
+  shakeDetector,
+} from "./detectors/shake";
+export type { ShakeConfig } from "./detectors/shake";
+
+export {
+  DEFAULT_HOLD_STILL_CONFIG,
+  createHoldStillDetector,
+  holdStillDetector,
+} from "./detectors/hold-still";
+export type { HoldStillConfig } from "./detectors/hold-still";
