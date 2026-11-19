@@ -53,6 +53,10 @@ room.on("gesture", ({ playerId, event }) => {
 });
 ```
 
+## Live staging
+
+Deployed from `main` by `.github/workflows/deploy.yml`. See [docs/DEPLOY.md](docs/DEPLOY.md). URLs appear here after the first deploy.
+
 ## Scripts
 
 | Script                              | What it does                |

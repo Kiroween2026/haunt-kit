@@ -1,0 +1,89 @@
+name: Deploy staging
+
+# Deploys the relay (Cloudflare Workers) and the controller + both apps (Cloudflare Pages)
+# on every push to main. Skips cleanly until the Cloudflare secrets exist. See docs/DEPLOY.md.
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: deploy-staging
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    env:
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+    steps:
+      - name: Check secrets
+        id: secrets
+        run: |
+          if [ -z "$CLOUDFLARE_API_TOKEN" ] || [ -z "$CLOUDFLARE_ACCOUNT_ID" ]; then
+            echo "::notice::Cloudflare secrets are not set yet. Skipping deploy (see docs/DEPLOY.md)."
+            echo "ready=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "ready=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - if: steps.secrets.outputs.ready == 'true'
+        uses: actions/checkout@v4
+      - if: steps.secrets.outputs.ready == 'true'
+        uses: pnpm/action-setup@v4
+      - if: steps.secrets.outputs.ready == 'true'
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+      - if: steps.secrets.outputs.ready == 'true'
+        run: pnpm install --frozen-lockfile
+
+      - name: Deploy relay (Workers, staging)
+        if: steps.secrets.outputs.ready == 'true'
+        id: relay
+        working-directory: packages/relay
+        run: |
+          pnpm exec wrangler deploy --env staging | tee deploy.log
+          url=$(grep -oE 'https://[a-zA-Z0-9.-]+\.workers\.dev' deploy.log | head -1)
+          if [ -z "$url" ]; then echo "::error::Could not read the Worker URL"; exit 1; fi
+          echo "https=$url" >> "$GITHUB_OUTPUT"
+          echo "wss=${url/https:/wss:}" >> "$GITHUB_OUTPUT"
+
+      - name: Check the deployed relay
+        if: steps.secrets.outputs.ready == 'true'
+        run: pnpm exec tsx packages/relay/src/node/smoke.ts "${{ steps.relay.outputs.wss }}"
+
+      - name: Deploy controller, Séance Party and Steady (Pages, staging branch)
+        if: steps.secrets.outputs.ready == 'true'
+        id: pages
+        env:
+          VITE_RELAY_URL: ${{ steps.relay.outputs.wss }}
+        run: |
+          deploy() { # <workspace dir> <pages project>
+            pnpm exec wrangler pages project create "$2" --production-branch main >/dev/null 2>&1 || true
+            (cd "$1" && pnpm run build)
+            pnpm exec wrangler pages deploy "$1/dist" --project-name "$2" --branch staging --commit-dirty=true | tee "/tmp/$2.log"
+            grep -oE 'https://[a-zA-Z0-9.-]+\.pages\.dev' "/tmp/$2.log" | tail -1
+          }
+          # The controller's stable staging URL is needed by the apps for their QR codes.
+          play=$(deploy packages/controller haunt-kit-play | tail -1)
+          echo "play=$play" >> "$GITHUB_OUTPUT"
+          export VITE_CONTROLLER_URL="https://staging.haunt-kit-play.pages.dev/"
+          seance=$(deploy apps/seance-party haunt-kit-seance | tail -1)
+          steady=$(deploy apps/steady haunt-kit-steady | tail -1)
+          {
+            echo "## Staging URLs"
+            echo ""
+            echo "| What | URL |"
+            echo "|---|---|"
+            echo "| Relay | ${{ steps.relay.outputs.wss }} |"
+            echo "| Phone controller | https://staging.haunt-kit-play.pages.dev (this deploy: $play) |"
+            echo "| Séance Party | https://staging.haunt-kit-seance.pages.dev (this deploy: $seance) |"
+            echo "| Steady | https://staging.haunt-kit-steady.pages.dev (this deploy: $steady) |"
+          } >> "$GITHUB_STEP_SUMMARY"
