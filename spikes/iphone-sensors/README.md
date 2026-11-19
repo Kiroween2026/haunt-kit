@@ -11,11 +11,13 @@ This spike is excluded from the root monorepo build and pnpm workspace tasks.
 ### 1. Install & Run Dev Server
 
 From the repository root:
+
 ```bash
 cd spikes/iphone-sensors
 pnpm install
 pnpm dev
 ```
+
 By default, the Vite dev server starts on `http://localhost:5173`.
 
 ---
@@ -43,26 +45,26 @@ cloudflared tunnel --url http://localhost:5173
 
 ### When Flat on a Table (Screen Facing Up)
 
-| Reading | Expected Nominal Value | Explanation |
-| :--- | :--- | :--- |
-| **`ax`** | $\approx 0.00\text{ m/s}^2$ | No sideways tilt |
-| **`ay`** | $\approx 0.00\text{ m/s}^2$ | No forward/backward tilt |
-| **`az`** | $\approx +9.81\text{ m/s}^2$ | Earth's gravity vector pointing up through screen ($+1.0\text{ g}$) |
-| **Linear `x, y, z`** | $\approx 0.00\text{ m/s}^2$ | Device is stationary (gravity subtracted) |
-| **Rotation rate `α, β, γ`** | $\approx 0.00\text{ deg/s}$ | Device is not rotating |
-| **Orientation `β` (pitch)** | $\approx 0^\circ$ | Level with horizon |
-| **Orientation `γ` (roll)** | $\approx 0^\circ$ | Level side-to-side |
-| **Sample Rate** | $\approx 60.0\text{ Hz}$ | iPhone Safari typically samples at 60 Hz |
-| **Mic RMS** | $\approx 0.000 - 0.030$ | Background room noise |
+| Reading                     | Expected Nominal Value       | Explanation                                                         |
+| :-------------------------- | :--------------------------- | :------------------------------------------------------------------ |
+| **`ax`**                    | $\approx 0.00\text{ m/s}^2$  | No sideways tilt                                                    |
+| **`ay`**                    | $\approx 0.00\text{ m/s}^2$  | No forward/backward tilt                                            |
+| **`az`**                    | $\approx +9.81\text{ m/s}^2$ | Earth's gravity vector pointing up through screen ($+1.0\text{ g}$) |
+| **Linear `x, y, z`**        | $\approx 0.00\text{ m/s}^2$  | Device is stationary (gravity subtracted)                           |
+| **Rotation rate `α, β, γ`** | $\approx 0.00\text{ deg/s}$  | Device is not rotating                                              |
+| **Orientation `β` (pitch)** | $\approx 0^\circ$            | Level with horizon                                                  |
+| **Orientation `γ` (roll)**  | $\approx 0^\circ$            | Level side-to-side                                                  |
+| **Sample Rate**             | $\approx 60.0\text{ Hz}$     | iPhone Safari typically samples at 60 Hz                            |
+| **Mic RMS**                 | $\approx 0.000 - 0.030$      | Background room noise                                               |
 
 ### When Held Vertically in Hand (Portrait, Screen Facing You)
 
-| Reading | Expected Nominal Value | Explanation |
-| :--- | :--- | :--- |
-| **`ax`** | $\approx 0.00\text{ m/s}^2$ | Lateral acceleration |
-| **`ay`** | $\approx -9.81\text{ m/s}^2$ (or $+9.81$) | Gravity vector acting along the length of the phone |
-| **`az`** | $\approx 0.00\text{ m/s}^2$ | Normal to screen is horizontal |
-| **Orientation `β` (pitch)** | $\approx 90^\circ$ | Upright portrait position |
+| Reading                     | Expected Nominal Value                    | Explanation                                         |
+| :-------------------------- | :---------------------------------------- | :-------------------------------------------------- |
+| **`ax`**                    | $\approx 0.00\text{ m/s}^2$               | Lateral acceleration                                |
+| **`ay`**                    | $\approx -9.81\text{ m/s}^2$ (or $+9.81$) | Gravity vector acting along the length of the phone |
+| **`az`**                    | $\approx 0.00\text{ m/s}^2$               | Normal to screen is horizontal                      |
+| **Orientation `β` (pitch)** | $\approx 90^\circ$                        | Upright portrait position                           |
 
 ### When Speaking or Screaming
 
@@ -70,7 +72,7 @@ cloudflared tunnel --url http://localhost:5173
 - Normal speaking: RMS $\approx 0.080 - 0.250$
 - Loud scream: RMS $\approx 0.600 - 1.000$
 
-*(Note: Raw audio is processed strictly in-memory into scalar RMS loudness; no audio data ever leaves the device or is saved).*
+_(Note: Raw audio is processed strictly in-memory into scalar RMS loudness; no audio data ever leaves the device or is saved)._
 
 ---
 
@@ -83,6 +85,7 @@ cloudflared tunnel --url http://localhost:5173
    `ghost-recording-<label>-<timestamp>.json`
 
 Export schema conforms to `@haunt-kit/protocol`:
+
 ```json
 {
   "meta": {
@@ -112,4 +115,5 @@ Export schema conforms to `@haunt-kit/protocol`:
   ]
 }
 ```
+
 Saved recordings can be copied to the `recordings/` folder for sensor replay and property testing.

@@ -18,10 +18,12 @@
       </header>
 
       <!-- Warnings / Diagnostic alerts -->
-      <div id="security-warning" class="alert alert-warning" style="display: none;">
+      <div id="security-warning" class="alert alert-warning" style="display: none">
         <strong>⚠️ Insecure Context Detected</strong>
         <p>iOS Safari requires HTTPS to access motion sensors and the microphone.</p>
-        <p class="tip">Run: <code>cloudflared tunnel --url http://localhost:5173</code> to test over HTTPS.</p>
+        <p class="tip">
+          Run: <code>cloudflared tunnel --url http://localhost:5173</code> to test over HTTPS.
+        </p>
       </div>
 
       <div id="status-banner" class="alert alert-info">
@@ -30,9 +32,7 @@
 
       <!-- Action Area -->
       <section class="action-card">
-        <button id="btn-start" class="btn btn-primary btn-large">
-          ▶ Start Sensors
-        </button>
+        <button id="btn-start" class="btn btn-primary btn-large">▶ Start Sensors</button>
 
         <div class="system-pills">
           <span id="pill-secure" class="pill pill-dim">HTTPS: checking...</span>
@@ -46,7 +46,9 @@
       <!-- Recording Section -->
       <section class="card recording-card">
         <h2>Ghost Recording (5s Sample)</h2>
-        <p class="hint">Record a 5-second sample and export as JSON conforming to <code>@haunt-kit/protocol</code>.</p>
+        <p class="hint">
+          Record a 5-second sample and export as JSON conforming to <code>@haunt-kit/protocol</code>.
+        </p>
         <div class="recording-controls">
           <label for="record-label" class="form-label">Recording Label:</label>
           <input
@@ -56,11 +58,9 @@
             value="table-flat"
             placeholder="e.g. table-flat, shoulder-raise, shake"
           />
-          <button id="btn-record" class="btn btn-record" disabled>
-            ⏺ Record 5 s
-          </button>
+          <button id="btn-record" class="btn btn-record" disabled>⏺ Record 5 s</button>
         </div>
-        <div id="record-progress-container" class="progress-bar-container" style="display: none;">
+        <div id="record-progress-container" class="progress-bar-container" style="display: none">
           <div id="record-progress-bar" class="progress-bar"></div>
         </div>
         <div id="record-status" class="record-status-text"></div>

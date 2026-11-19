@@ -467,7 +467,7 @@ function stopAndExportRecording(): void {
   document.body.removeChild(link);
   URL.revokeObjectURL(url);
 
-  recordStatus.innerHTML = `✓ Recorded <strong>${sampleCount}</strong> samples (${sampleRateHz} Hz). Downloaded: <code>${filename}</code>`;
+  recordStatus.textContent = `✓ Recorded ${sampleCount} samples (${sampleRateHz} Hz). Downloaded: ${filename}`;
 }
 
 // Wire buttons
