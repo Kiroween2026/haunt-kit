@@ -30,9 +30,15 @@ export const GESTURE_DATA_KEY = /^[A-Za-z][A-Za-z0-9_]{0,39}$/;
 export const gestureEventSchema = z.object({
   name: z.string().min(1).max(40),
   t: finite,
-  // Keys must start with a letter. This rejects "__proto__", which zod would otherwise drop
-  // silently (prototype-pollution guard), changing the message between phone and host.
-  data: z.record(z.string().regex(GESTURE_DATA_KEY), finite).optional(),
+  // Keys must start with a letter, and "__proto__" is rejected. Otherwise zod drops that key
+  // silently (prototype-pollution guard) and the host gets a different message than the phone sent.
+  data: z
+    .preprocess(
+      // zod skips a "__proto__" key before checking key names, so catch it here.
+      (v) => (v !== null && typeof v === "object" && Object.hasOwn(v, "__proto__") ? null : v),
+      z.record(z.string().regex(GESTURE_DATA_KEY), finite),
+    )
+    .optional(),
 });
 
 // Compile-time guard: the zod types must equal the frozen contract types.
