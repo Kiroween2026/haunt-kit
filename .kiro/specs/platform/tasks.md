@@ -12,13 +12,13 @@
 
 ## Host SDK (Fri Nov 20)
 
-- [ ] 8. `Transport`, URLs, backoff, event emitter
-- [ ] 9. `HostSession` / `createRoom` with QR, events, `sendFeedback`, `setUi`, latency (Req 5.1, 5.2)
-- [ ] 10. Host auto-resume (Req 5.3)
-- [ ] 11. Ghost Recording placeholder, synthetic recordings, `GhostPlayer`
-- [ ] 12. MockTransport: `createMockRelay`, `createMockRoom` (Req 5.5)
-- [ ] 13. Device modules: normalize, RMS, batcher, OS detection, permissions, sampler, mic meter, wake lock (Req 4.2–4.5)
-- [ ] 14. Local mode `createLocalSession` (Req 5.4)
+- [x] 8. `Transport`, URLs, backoff, event emitter
+- [x] 9. `HostSession` / `createRoom` with QR, events, `sendFeedback`, `setUi`, latency (Req 5.1, 5.2)
+- [x] 10. Host auto-resume (Req 5.3)
+- [x] 11. Ghost Recording placeholder, synthetic recordings, `GhostPlayer`
+- [x] 12. MockTransport: `createMockRelay`, `createMockRoom` (Req 5.5)
+- [x] 13. Device modules: normalize, RMS, batcher, OS detection, permissions, sampler, mic meter, wake lock (Req 4.2–4.5)
+- [x] 14. Local mode `createLocalSession` (Req 5.4)
 
 ## Controller (Thu Nov 19)
 
