@@ -452,3 +452,18 @@ describe("Room properties", () => {
     );
   });
 });
+
+describe("memory relay", () => {
+  it("delivers a message sent just before the server closes (like a real WebSocket)", async () => {
+    const { createMemoryRelay } = await import("./memory");
+    const relay = createMemoryRelay();
+    const t = relay.transport("ws://mem/join?room=ZZZZ");
+    const got: string[] = [];
+    await new Promise<void>((resolve) => {
+      t.onopen = () => t.send(JSON.stringify({ v: 1, type: "join", roomCode: "ZZZZ", name: "A", device }));
+      t.onmessage = (m) => got.push(m);
+      t.onclose = () => resolve();
+    });
+    expect(got.map((m) => JSON.parse(m).code)).toEqual(["room_not_found"]);
+  });
+});

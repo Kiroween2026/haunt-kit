@@ -12,11 +12,13 @@
     "typecheck": "pnpm -r --parallel typecheck",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "build": "pnpm -r --filter \"./apps/*\" build",
+    "build": "pnpm -r --filter \"./apps/*\" --filter @haunt-kit/controller build",
     "dev:seance": "pnpm --filter @haunt-kit/seance-party dev",
     "dev:steady": "pnpm --filter @haunt-kit/steady dev",
     "dev:relay": "pnpm --filter @haunt-kit/relay dev",
-    "dev:token": "tsx packages/relay/src/node/make-token.ts"
+    "dev:token": "tsx packages/relay/src/node/make-token.ts",
+    "dev:controller": "pnpm --filter @haunt-kit/controller dev",
+    "dev:demo": "pnpm --filter @haunt-kit/host-sdk demo"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",

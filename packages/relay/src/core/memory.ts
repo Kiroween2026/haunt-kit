@@ -22,6 +22,7 @@ export function createMemoryRelay(opts: HubOptions = {}): MemoryRelay {
     const isHost = url.pathname.endsWith("/host");
     let state: "connecting" | "open" | "closed" = "connecting";
     let conn: HubConnection | null = null;
+    let closedHere = false;
 
     const finish = (code: number, reason: string) => {
       if (state === "closed") return;
@@ -41,7 +42,10 @@ export function createMemoryRelay(opts: HubOptions = {}): MemoryRelay {
           if (state === "open") conn?.message(text);
         });
       },
-      close: () => finish(1000, "bye"),
+      close: () => {
+        closedHere = true;
+        finish(1000, "bye");
+      },
       onopen: null,
       onmessage: null,
       onclose: null,
@@ -50,7 +54,14 @@ export function createMemoryRelay(opts: HubOptions = {}): MemoryRelay {
     queueMicrotask(() => {
       if (state !== "connecting") return;
       const c = {
-        send: (text: string) => queueMicrotask(() => state === "open" && t.onmessage?.(text)),
+        // Like a real WebSocket, a message sent before the server closes still arrives before onclose.
+        // Only a close started by this side stops delivery.
+        send: (text: string) => {
+          if (state === "closed") return;
+          queueMicrotask(() => {
+            if (!closedHere) t.onmessage?.(text);
+          });
+        },
         close: (code: number, reason: string) => finish(code, reason),
       };
       conn = isHost ? hub.openHost(c, room) : hub.openPlayer(c, room ?? "");

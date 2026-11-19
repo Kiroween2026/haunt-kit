@@ -22,10 +22,35 @@ pnpm dev:seance   # Séance Party
 pnpm dev:steady   # Steady
 ```
 
-To open a local page on an iPhone, motion sensors need HTTPS:
+## Try it on your phone (local dev)
+
+Motion sensors need HTTPS, so the phone goes through one `cloudflared` tunnel. The controller's dev server proxies `/relay` to the local relay, so one tunnel covers both.
 
 ```bash
-cloudflared tunnel --url http://localhost:5173
+pnpm dev:relay        # relay on ws://127.0.0.1:8787
+pnpm dev:controller   # phone page on http://localhost:5180
+pnpm dev:demo         # dot demo on http://localhost:5181
+cloudflared tunnel --url http://localhost:5180
+```
+
+Open `http://localhost:5181/?play=https://<your-tunnel>.trycloudflare.com` on the laptop, scan the QR code with the phone, tap **Enter the séance** and tilt. No phone? Click **Add ghost player**.
+
+## Use the kit in an app
+
+```ts
+import { createRoom, createMockRoom, createLocalSession } from "@haunt-kit/host-sdk";
+
+const room = await createRoom({ relayUrl: "ws://127.0.0.1:8787", controllerUrl: "https://<tunnel>/" });
+// or, with no relay and fake players:
+// const room = await createMockRoom({ ghosts: [{ name: "Casper" }, { name: "Boo", recording: "shake" }] });
+
+room.on("player_joined", (p) => room.setUi(p.playerId, { view: "tilt", title: "Steer the planchette" }));
+room.on("frames", ({ playerId, samples }) => {
+  /* samples: { t, ax, ay, az, gx, gy, gz, alpha, beta, gamma, rms? } */
+});
+room.on("gesture", ({ playerId, event }) => {
+  /* event: { name, t, data? } */
+});
 ```
 
 ## Scripts

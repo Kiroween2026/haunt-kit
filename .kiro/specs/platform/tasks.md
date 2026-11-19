@@ -22,12 +22,12 @@
 
 ## Controller (Thu Nov 19)
 
-- [ ] 15. `PhoneClient`: join, store playerId, reconnect with backoff, ping/latency (Req 4.7)
-- [ ] 16. Screens: join form, enter tap, views, feedback, error screens (Req 4.1, 4.6, 4.8)
-- [ ] 17. 30 Hz sampling + batches (Req 4.5)
+- [x] 15. `PhoneClient`: join, store playerId, reconnect with backoff, ping/latency (Req 4.7)
+- [x] 16. Screens: join form, enter tap, views, feedback, error screens (Req 4.1, 4.6, 4.8)
+- [x] 17. 30 Hz sampling + batches (Req 4.5)
 
 ## Reconnect + demo (Sat Nov 21)
 
-- [ ] 18. Wake lock re-acquire on visibility change; rejoin after screen lock
-- [ ] 19. Dot demo: tilt a real iPhone, a dot moves on the laptop
-- [ ] 20. Vite proxy + cloudflared instructions (Req 3.3)
+- [x] 18. Wake lock re-acquire on visibility change; rejoin after screen lock
+- [x] 19. Dot demo: tilt a real iPhone, a dot moves on the laptop (built and checked with ghost players; real iPhone test still to do)
+- [x] 20. Vite proxy + cloudflared instructions (Req 3.3)
