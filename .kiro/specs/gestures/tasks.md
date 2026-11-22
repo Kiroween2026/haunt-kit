@@ -79,3 +79,11 @@ _Goal: Physical therapy rep counter and mathematical verification._
 - [x] **Task 4.4: Validation Against Real iPhone Recordings**
   - Run all detectors against benchmark recordings in `recordings/`.
   - Log any discovered bugs or calibration adjustments in `KIRO_LOG.md`.
+
+## Anish's second branch (`anish/detectors-2`), reviewed Nov 22
+
+Anish and Yadnesh each wrote flick, flip, spin, scream, tap, rep and the catalog on the same file names. Decision: **keep the merged versions** (Steady needs the rep detector's 2-second calibration hold and `status()`), and bring in what runs against them.
+
+- Merged from his branch, credited to him: `src/pbt/generators.ts`, `rotation.test.ts` (shake is rotation-invariant) and `stillness.test.ts` (a still phone never fires).
+- Not merged (still on his branch, untouched): his versions of the seven detectors, the catalog, and his `rep-counter`, `sample-rate`, `causality` and `benchmark` tests. They assume a rep detector that calibrates from the first sample and a different tap API, so they fail against the merged `rep` for that reason, not because of a bug in either.
+- Open for Anish: port the useful parts of those tests (a 2-second still lead-in before the reps) so they run against the merged `rep`, and compare his flick, spin and flip thresholds with the merged ones.
