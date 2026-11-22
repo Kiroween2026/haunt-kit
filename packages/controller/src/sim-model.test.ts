@@ -1,3 +1,5 @@
+import { readFileSync, readdirSync } from "node:fs";
+import type { Sample } from "@haunt-kit/protocol";
 import { describe, expect, it } from "vitest";
 import fc from "fast-check";
 import { sampleSchema } from "@haunt-kit/protocol";
@@ -13,7 +15,7 @@ describe("simulator model", () => {
   });
 
   it("flat gives az = +g, like a real phone screen-up", () => {
-    expect(gravity(0, 0)).toEqual({ ax: 0, ay: -0, az: G });
+    expect(gravity(0, 0)).toEqual({ ax: -0, ay: 0, az: G });
   });
 
   it("property: gravity magnitude is always g and samples are valid, for any pointer", () => {
@@ -79,5 +81,27 @@ describe("simulator model", () => {
     m.sample(0);
     m.setPointer(0.5, 0.75);
     expect(m.sample(100).gx).toBeCloseTo(225); // 22.5° in 0.1 s
+  });
+});
+
+describe("simulator gravity matches real phones", () => {
+  // Anish's real Android Chrome recordings (recordings/*.json, 60 Hz). For every sample, the
+  // gravity this model predicts from beta/gamma must match the measured ax/ay/az.
+  // The first version had the ax and ay signs backwards; this test found it.
+  const dir = new URL("../../../recordings/", import.meta.url);
+  const files = readdirSync(dir).filter((f) => f.endsWith(".json"));
+
+  it("there are real recordings to check against", () => {
+    expect(files.length).toBeGreaterThan(0);
+  });
+
+  it.each(files)("%s: mean error under 1 m/s²", (file) => {
+    const rec = JSON.parse(readFileSync(new URL(file, dir), "utf8")) as { samples: Sample[] };
+    let err = 0;
+    for (const s of rec.samples) {
+      const g = gravity(s.beta, s.gamma);
+      err += Math.hypot(s.ax - g.ax, s.ay - g.ay, s.az - g.az);
+    }
+    expect(err / rec.samples.length).toBeLessThan(1);
   });
 });

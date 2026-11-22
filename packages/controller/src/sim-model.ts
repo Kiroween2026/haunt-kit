@@ -14,11 +14,11 @@ export function tiltFromPointer(x: number, y: number): { beta: number; gamma: nu
   return { gamma: (clamp(x) * 2 - 1) * MAX_TILT_DEG, beta: (clamp(y) * 2 - 1) * MAX_TILT_DEG };
 }
 
-/** Gravity in the phone's frame for a tilt (W3C axes, screen up → az = +g). */
+/** Gravity in the phone's frame for a tilt (W3C axes, screen up → az = +g). Checked against real Android recordings in recordings/. */
 export function gravity(beta: number, gamma: number): { ax: number; ay: number; az: number } {
   const b = (beta * Math.PI) / 180;
   const g = (gamma * Math.PI) / 180;
-  return { ax: G * Math.sin(g) * Math.cos(b), ay: -G * Math.sin(b), az: G * Math.cos(g) * Math.cos(b) };
+  return { ax: -G * Math.sin(g) * Math.cos(b), ay: G * Math.sin(b), az: G * Math.cos(g) * Math.cos(b) };
 }
 
 const BURST_MS: Record<Exclude<SimKey, "hold">, number> = { shake: 700, flick: 150, spin: 800 };

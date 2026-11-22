@@ -7,8 +7,8 @@ async function startFakeMotion(page: import("@playwright/test").Page, beta: numb
     ([b, g]) => {
       const rad = (d: number) => (d * Math.PI) / 180;
       const accel = {
-        x: 9.81 * Math.sin(rad(g)) * Math.cos(rad(b)),
-        y: -9.81 * Math.sin(rad(b)),
+        x: -9.81 * Math.sin(rad(g)) * Math.cos(rad(b)),
+        y: 9.81 * Math.sin(rad(b)),
         z: 9.81 * Math.cos(rad(g)) * Math.cos(rad(b)),
       };
       setInterval(() => {

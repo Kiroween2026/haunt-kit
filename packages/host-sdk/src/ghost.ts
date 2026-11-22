@@ -70,8 +70,8 @@ export function synthRecording(kind: SynthKind, seconds = 5, hz = 30, seed = 1):
     if (beta !== 0 || gamma !== 0) {
       const b = (beta * Math.PI) / 180;
       const g = (gamma * Math.PI) / 180;
-      ax = 9.81 * Math.sin(g) * Math.cos(b);
-      ay = -9.81 * Math.sin(b);
+      ax = -9.81 * Math.sin(g) * Math.cos(b);
+      ay = 9.81 * Math.sin(b);
       az = 9.81 * Math.cos(g) * Math.cos(b);
     }
     samples.push({ t, ax, ay, az, gx: 0, gy: 0, gz: 0, alpha: 0, beta, gamma, rms: Math.min(1, rms) });
