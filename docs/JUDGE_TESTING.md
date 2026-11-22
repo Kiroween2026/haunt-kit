@@ -1,52 +1,73 @@
 # Testing Haunt Kit (for judges)
 
-You don't need friends, an app install, or even a phone. Pick the way that fits you.
+You don't need friends, an app install or even a phone. Pick the way that fits you. Live links are in the [README](../README.md#try-it-in-10-seconds).
 
-> Live URLs: _filled in after deploy (see README)._ Everything below also works locally (see the end of this page).
->
-> Team note (remove before submitting): sections A to C describe the finished apps. Séance Party bots and Steady are being built until Nov 29; the simulator, controller and dot demo work today. Re-check every step on Sun Nov 29.
+Every step below is one our automated tests run on Safari's engine (WebKit) and Chromium.
 
-## A. Alone with no phone (2 minutes)
+## A. Séance Party alone, no phone (2 minutes)
 
-1. Open **Séance Party** on your computer. A room code and a QR code appear.
-2. Click **Add bots** and choose 3 ghost bots. They play like real players.
-3. In a second browser tab, open the **phone controller** link shown under the QR code, then click **Play without a phone**.
-4. Type the room code and join. Move the mouse to tilt, press **S** to shake, **H** to hold still, **Space** to tap. If you allow the mic, shout to play Banshee Scream-off.
-5. Press **Start** in the first tab.
+1. Open **Séance Party** on your computer. If there is no relay it says **Practice mode** and still works.
+2. Click **Fill to 4**. Three ghost bots join. Bots play like people: they react slowly and make mistakes.
+3. Click **Start the séance**. Three games follow, about three minutes in all:
+   - **Ouija Planchette:** everyone's tilt steers one planchette. Bots spell the words.
+   - **Hold Still:** the ghost looks away (dance), turns (freeze), then looks. Anyone moving is out.
+   - **Banshee Scream-off:** the loudest scream wins.
+4. At the end you see **Last ghost standing** and the final scores. **Play again** keeps the bots.
 
-## B. Alone with one phone (3 minutes)
+## B. Séance Party with you in it, no phone (3 minutes)
 
-1. Open **Séance Party** on your computer and add 2 or 3 bots.
-2. Scan the QR code with your phone's camera. Tap **Enter the séance** and allow motion and microphone.
-   - On iPhone: if Safari doesn't ask, close the tab and scan again.
-3. Start the game. Tilt the phone to steer the planchette.
+Needs the relay: open the live link, not Practice mode. (Locally: `pnpm dev:relay`.)
 
-## C. Steady (one phone, 2 minutes)
+1. In the lobby, click **Join from this computer**. A new tab opens.
+2. Type a name and click **Join with this computer**. You appear in the lobby as a ghost.
+3. Back in the lobby tab, click **Fill to 4** and **Start the séance**.
+4. In your tab: **move the mouse** over the circle to tilt, press **H** to hold still, press **S** to shake, and **allow the microphone** to scream in the Banshee game.
 
-1. Open **Steady** on your phone.
-2. Read the disclaimer (not a medical device), pick **Shoulder raise**, tap **Start**.
-3. Hold the phone in your hand at your side for 2 seconds, then raise your arm forward 5 times. Steady counts out loud and shows the angle.
-4. Open **Report** to see the summary for a therapist. Nothing is uploaded; history stays on the phone.
+## C. Séance Party with your phone (3 minutes)
 
-## D. With friends (best)
+1. Open the live link on your computer and scan the QR code with your phone's camera.
+2. Tap **Enter the séance**. Allow motion and the microphone.
+   - On iPhone, if Safari doesn't ask, close the tab and scan again.
+3. Start the game from the computer. Tilt your phone to steer. Lock the screen for a few seconds: you come back as the same ghost.
 
-Everyone scans the QR code on the big screen. Up to 8 players. If someone's screen locks, they come back as the same ghost.
+## D. Steady, no phone (2 minutes)
+
+1. Open **Steady**. Read the notice (not a medical device), then click **I understand**.
+2. Click **Shoulder raise**, then **Try the demo (no phone needed)**.
+3. A pretend person does five reps. Watch the count, the angle gauge and the advice: one rep is **Not full range** and one is **Too fast**. Turn your sound on to hear it count.
+4. Click **Stop**, then **Report for my therapist**. Nothing is uploaded. **My sessions** (on the home screen) shows what is saved on this device.
+
+## E. Steady on your phone (2 minutes)
+
+1. Open **Steady** on your phone, pick **Shoulder raise**, tap **Start**, and allow motion.
+2. Hold the phone in your hand, arm down, for 2 seconds. Then raise your arm in front of you and lower it, five times.
+3. Try **Settings** on the home screen: **Voice only**, **High contrast**, and **Large** text.
+
+## F. Add phone controls to your own app
+
+See "Add phone controls to your app" in the [README](../README.md): `createRoom` and `createMockRoom` (fake players, no relay) take a few lines.
 
 ## Run it locally instead
 
 ```bash
 git clone https://github.com/Kiroween2026/haunt-kit.git && cd haunt-kit
 corepack enable && pnpm install
-pnpm dev:relay & pnpm dev:controller & pnpm dev:demo
+pnpm dev:relay          # in one terminal
+pnpm dev:controller     # in another (phone page, port 5180)
+pnpm dev:seance         # Séance Party, http://localhost:5183
+pnpm dev:steady         # Steady, http://localhost:5184
 ```
 
-Open `http://localhost:5181` and click **Add ghost player**, and open `http://localhost:5180/sim.html` to join with the keyboard and mouse. For a real phone you need HTTPS: `cloudflared tunnel --url http://localhost:5180`, then open the dot demo with `?play=https://<tunnel>.trycloudflare.com`.
+For a real phone you need HTTPS: `cloudflared tunnel --url http://localhost:5180`, then open Séance Party with `?play=https://<tunnel>.trycloudflare.com`.
 
 ## Something not working?
 
-| You see                       | Do this                                                                                                              |
-| ----------------------------- | -------------------------------------------------------------------------------------------------------------------- |
-| "Motion is blocked" on iPhone | Close the tab and scan again, tap **Allow**. Or Settings → Apps → Safari → Advanced → Website Data, remove the site. |
-| "This page needs HTTPS"       | Use the https:// link, not an IP address.                                                                            |
-| "Room not found"              | Check the 4 letters on the big screen. Rooms close 2 minutes after the big screen is closed.                         |
-| Scream doesn't count          | Reload and allow the microphone.                                                                                     |
+| You see                         | Do this                                                                                                              |
+| ------------------------------- | -------------------------------------------------------------------------------------------------------------------- |
+| "Practice mode (no phones)"     | The relay isn't reachable. Bots still work. For phones, use the live link or run `pnpm dev:relay`.                   |
+| "Motion is blocked" on iPhone   | Close the tab and scan again, tap **Allow**. Or Settings → Apps → Safari → Advanced → Website Data, remove the site. |
+| "This page needs HTTPS"         | Use the https:// link, not an IP address.                                                                            |
+| "Room not found"                | Check the 4 letters. A room closes 2 minutes after the big screen is closed.                                         |
+| Scream doesn't count            | Reload and allow the microphone.                                                                                     |
+| Steady says "no motion sensors" | You're on a computer. Click **Try the demo**.                                                                        |
+| Steady doesn't speak            | Turn the sound up, and check **Count reps out loud** in Settings. iPhone only speaks after a tap.                    |

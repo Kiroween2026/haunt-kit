@@ -44,7 +44,7 @@ flowchart LR
   A1 -- "ui view, feedback" --> R
   R -- "ui, feedback" --> P1
   K["Kiro + Séance MCP"] -. "snapshot, record, replay<br/>(dev relay only)" .-> R
-  Steady["Steady (local mode:<br/>sensors in the same page)"]
+  Steady["Steady (one phone:<br/>sensors in the same page)"]
 ```
 
 - The phone reads motion at 30 Hz. In tilt and scream views it streams samples in batches every 100 ms. In other views it runs gesture detectors **on the phone** and sends only events.
@@ -107,6 +107,8 @@ Motion sensors need HTTPS, so the phone goes through one `cloudflared` tunnel. T
 pnpm dev:relay        # relay on ws://127.0.0.1:8787
 pnpm dev:controller   # phone page on http://localhost:5180 (simulator: /sim.html)
 pnpm dev:demo         # dot demo on http://localhost:5181
+pnpm dev:seance       # Séance Party on http://localhost:5183 (works with no relay: practice mode)
+pnpm dev:steady       # Steady on http://localhost:5184
 cloudflared tunnel --url http://localhost:5180
 ```
 
