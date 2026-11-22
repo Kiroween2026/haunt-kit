@@ -65,18 +65,24 @@ jobs:
         env:
           VITE_RELAY_URL: ${{ steps.relay.outputs.wss }}
         run: |
+          # Stop at the first error. Without this a failed deploy still showed a green check.
+          set -euo pipefail
           deploy() { # <workspace dir> <pages project>
-            pnpm exec wrangler pages project create "$2" --production-branch main >/dev/null 2>&1 || true
+            pnpm exec wrangler pages project create "$2" --production-branch main || echo "(project $2 already exists)"
             (cd "$1" && pnpm run build)
-            pnpm exec wrangler pages deploy "$1/dist" --project-name "$2" --branch staging --commit-dirty=true | tee "/tmp/$2.log"
-            grep -oE 'https://[a-zA-Z0-9.-]+\.pages\.dev' "/tmp/$2.log" | tail -1
+            pnpm exec wrangler pages deploy "$1/dist" --project-name "$2" --branch staging --commit-dirty=true 2>&1 | tee "/tmp/$2.log"
           }
+          url_of() { grep -oE 'https://[a-zA-Z0-9.-]+\.pages\.dev' "/tmp/$1.log" | tail -1; }
+          # Called directly, not inside $(...), so set -e stops the step on the first failure.
           # The controller's stable staging URL is needed by the apps for their QR codes.
-          play=$(deploy packages/controller haunt-kit-play | tail -1)
+          deploy packages/controller haunt-kit-play
+          play=$(url_of haunt-kit-play)
           echo "play=$play" >> "$GITHUB_OUTPUT"
           export VITE_CONTROLLER_URL="https://staging.haunt-kit-play.pages.dev/"
-          seance=$(deploy apps/seance-party haunt-kit-seance | tail -1)
-          steady=$(deploy apps/steady haunt-kit-steady | tail -1)
+          deploy apps/seance-party haunt-kit-seance
+          seance=$(url_of haunt-kit-seance)
+          deploy apps/steady haunt-kit-steady
+          steady=$(url_of haunt-kit-steady)
           {
             echo "## Staging URLs"
             echo ""
@@ -87,3 +93,18 @@ jobs:
             echo "| Séance Party | https://staging.haunt-kit-seance.pages.dev (this deploy: $seance) |"
             echo "| Steady | https://staging.haunt-kit-steady.pages.dev (this deploy: $steady) |"
           } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Check the live pages answer
+        if: steps.secrets.outputs.ready == 'true'
+        run: |
+          set -euo pipefail
+          for url in https://staging.haunt-kit-play.pages.dev https://staging.haunt-kit-seance.pages.dev https://staging.haunt-kit-steady.pages.dev; do
+            ok=no
+            for try in 1 2 3 4 5 6; do
+              code=$(curl -s -o /tmp/page.html -w '%{http_code}' "$url" || true)
+              if [ "$code" = "200" ] && grep -q '<div id="root"\|<main' /tmp/page.html; then ok=yes; break; fi
+              sleep 5
+            done
+            echo "$url -> $code"
+            [ "$ok" = yes ] || { echo "::error::$url did not answer with a page"; exit 1; }
+          done
