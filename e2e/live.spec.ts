@@ -15,7 +15,8 @@ test("Séance Party connects to the live relay and shows a room code and QR code
   await expect(page.locator(".hk-qr__code-image svg")).toBeVisible();
   // The QR code points at the live phone controller, not at localhost.
   const url = (await page.locator(".hk-qr__url").textContent())!;
-  expect(url).toContain("haunt-kit-play.pages.dev");
+  // Exactly this deployment's controller: staging's address would not contain the production one.
+  expect(url).toContain(`${PLAY}?room=`);
   expect(url).not.toContain("localhost");
 });
 
