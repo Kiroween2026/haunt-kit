@@ -8,3 +8,4 @@ export * from "./flip";
 export * from "./scream";
 export * from "./tap";
 export * from "./rep";
+export * from "./double-shake";

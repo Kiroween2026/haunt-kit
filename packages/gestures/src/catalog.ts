@@ -1,6 +1,7 @@
 // Owner: Anish. Registry that maps a gesture name to its detector.
 import type { Detector } from "@haunt-kit/protocol";
 import {
+  doubleShakeDetector,
   flickDetector,
   flipDetector,
   holdStillDetector,
@@ -52,4 +53,5 @@ export const catalog = new GestureCatalog()
   .register(flipDetector)
   .register(screamDetector)
   .register(tapDetector)
-  .register(repDetector);
+  .register(repDetector)
+  .register(doubleShakeDetector);

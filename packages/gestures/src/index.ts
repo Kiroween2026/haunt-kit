@@ -58,8 +58,19 @@ export {
   DEFAULT_REP_CONFIG,
   createRepDetector,
   repDetector,
+  DEFAULT_DOUBLE_SHAKE_CONFIG,
+  createDoubleShakeDetector,
+  doubleShakeDetector,
 } from "./detectors";
-export type { FlickConfig, SpinConfig, FlipConfig, ScreamConfig, TapConfig, RepConfig } from "./detectors";
+export type {
+  FlickConfig,
+  SpinConfig,
+  FlipConfig,
+  ScreamConfig,
+  TapConfig,
+  RepConfig,
+  DoubleShakeConfig,
+} from "./detectors";
 
 // Catalog
 export { GestureCatalog, catalog } from "./catalog";

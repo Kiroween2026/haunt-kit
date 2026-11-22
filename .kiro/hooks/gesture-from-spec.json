@@ -1,0 +1,27 @@
+{
+  "version": "v1",
+  "hooks": [
+    {
+      "name": "Gesture from spec",
+      "description": "When Kiro saves packages/gestures/specs/<name>.gesture.md, give Kiro a work order: write the detector, a property test for every 'Must NOT fire when' line, register it, run the tests.",
+      "trigger": "PostFileSave",
+      "matcher": "\\.gesture\\.md$",
+      "action": {
+        "type": "command",
+        "command": "pnpm exec tsx packages/gestures/src/hook/cli.ts"
+      },
+      "timeout": 30
+    },
+    {
+      "name": "Gesture tests on save",
+      "description": "Runs the gesture tests whenever Kiro saves a file in packages/gestures/src, so a broken detector shows up at once.",
+      "trigger": "PostFileSave",
+      "matcher": "packages/gestures/src/.*\\.ts$",
+      "action": {
+        "type": "command",
+        "command": "pnpm exec vitest run packages/gestures --reporter=dot 2>&1 | tail -40"
+      },
+      "timeout": 120
+    }
+  ]
+}

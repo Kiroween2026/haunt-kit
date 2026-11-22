@@ -254,8 +254,9 @@ describe("rep", () => {
 });
 
 describe("catalog", () => {
-  it("has all nine detectors", () => {
+  it("has all ten detectors", () => {
     expect(catalog.list().sort()).toEqual([
+      "double-shake",
       "flick",
       "flip",
       "hold-still",
