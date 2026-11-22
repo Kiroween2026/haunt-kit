@@ -1,0 +1,16 @@
+{
+  "version": "v1",
+  "hooks": [
+    {
+      "name": "Design check on save",
+      "description": "When Kiro saves a .tsx or .css file under apps/*/src or packages/ui/src, check it against .kiro/steering/design.md (colors, focus, text size, tap targets, reduced motion, alt text, tone) and report exact lines.",
+      "trigger": "PostFileSave",
+      "matcher": "(apps/[^/]+/src|packages/ui/src)/.*\\.(tsx|css)$",
+      "action": {
+        "type": "command",
+        "command": "pnpm exec tsx scripts/design-check.ts"
+      },
+      "timeout": 30
+    }
+  ]
+}

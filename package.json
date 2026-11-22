@@ -20,9 +20,11 @@
     "dev:controller": "pnpm --filter @haunt-kit/controller dev",
     "dev:demo": "pnpm --filter @haunt-kit/host-sdk demo",
     "e2e": "playwright test",
-    "check:submission": "tsx scripts/check-submission.ts"
+    "check:submission": "tsx scripts/check-submission.ts",
+    "design-check": "tsx scripts/design-check.ts"
   },
   "devDependencies": {
+    "@axe-core/playwright": "^4.14.0",
     "@eslint/js": "^10.0.1",
     "@haunt-kit/host-sdk": "workspace:*",
     "@playwright/test": "^1.65.1",
