@@ -1,7 +1,7 @@
-/* Fonts are self-hosted from npm (@fontsource), all under the SIL Open Font License 1.1. */
-@import "@fontsource/cinzel/600.css";
-@import "@fontsource/cinzel/800.css";
-@import "@fontsource/nunito/400.css";
-@import "@fontsource/nunito/700.css";
-@import "@fontsource/atkinson-hyperlegible/400.css";
-@import "@fontsource/atkinson-hyperlegible/700.css";
+/* Fonts are self-hosted from npm (@fontsource), all under the SIL Open Font License 1.1. Latin only, to keep the download small. */
+@import "@fontsource/cinzel/latin-600.css";
+@import "@fontsource/cinzel/latin-800.css";
+@import "@fontsource/nunito/latin-400.css";
+@import "@fontsource/nunito/latin-700.css";
+@import "@fontsource/atkinson-hyperlegible/latin-400.css";
+@import "@fontsource/atkinson-hyperlegible/latin-700.css";

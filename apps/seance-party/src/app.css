@@ -1,0 +1,202 @@
+/* Owner: Viviana (built by Yadnesh while Viviana is unavailable). Layout only: colors, type and motion come from @haunt-kit/ui. */
+
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+}
+.sp-app {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  padding: var(--hk-space-4);
+  gap: var(--hk-space-4);
+}
+.sp-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--hk-space-3);
+}
+.sp-header h1 {
+  margin: 0;
+  font-size: var(--hk-text-xl);
+}
+.sp-badge {
+  color: var(--hk-color-muted);
+  font-size: var(--hk-text-sm);
+}
+.sp-main {
+  flex: 1;
+  display: grid;
+  gap: var(--hk-space-4);
+  align-content: start;
+}
+.sp-lobby {
+  grid-template-columns: repeat(auto-fit, minmax(20rem, 1fr));
+}
+.sp-ghosts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--hk-space-4);
+  justify-content: center;
+  padding: var(--hk-space-3) 0;
+}
+.sp-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--hk-space-3);
+  align-items: center;
+}
+.sp-select {
+  min-height: var(--hk-target);
+  padding: 0 var(--hk-space-3);
+  font: inherit;
+  color: var(--hk-color-text);
+  background: var(--hk-color-surface);
+  border: 2px solid var(--hk-color-border);
+  border-radius: var(--hk-radius-md);
+}
+.sp-center {
+  display: grid;
+  justify-items: center;
+  text-align: center;
+  gap: var(--hk-space-4);
+  padding: var(--hk-space-5) var(--hk-space-3);
+}
+.sp-big {
+  font-family: var(--hk-font-heading);
+  font-size: var(--hk-text-xxl);
+  line-height: 1.1;
+  margin: 0;
+}
+.sp-rules {
+  max-width: 40rem;
+  font-size: var(--hk-text-lg);
+  margin: 0;
+}
+.sp-note {
+  color: var(--hk-color-muted);
+  max-width: 40rem;
+  margin: 0;
+}
+.sp-link {
+  color: var(--hk-color-accent);
+}
+.sp-board {
+  width: min(92vw, 70vh, 48rem);
+  height: auto;
+}
+.sp-board__bg {
+  fill: var(--hk-color-surface);
+  stroke: var(--hk-color-border);
+  stroke-width: 0.02;
+}
+.sp-letter {
+  fill: var(--hk-color-text);
+  font-family: var(--hk-font-heading);
+  text-anchor: middle;
+  dominant-baseline: central;
+  font-weight: 800;
+}
+.sp-letter--target {
+  fill: var(--hk-color-glow);
+}
+.sp-ring {
+  fill: none;
+  stroke: var(--hk-color-accent);
+  stroke-width: 0.02;
+}
+.sp-planchette {
+  fill: var(--hk-color-raised);
+  stroke: var(--hk-color-accent);
+  stroke-width: 0.025;
+  filter: drop-shadow(0 0 0.04px var(--hk-color-accent));
+}
+.sp-word {
+  display: flex;
+  gap: var(--hk-space-2);
+  justify-content: center;
+  font-family: var(--hk-font-heading);
+  font-size: var(--hk-text-xl);
+}
+.sp-word__letter {
+  min-width: 1.4ch;
+  text-align: center;
+  border-bottom: 4px solid var(--hk-color-border);
+  color: var(--hk-color-muted);
+}
+.sp-word__letter--done {
+  color: var(--hk-color-success);
+  border-color: var(--hk-color-success);
+}
+.sp-stats {
+  display: flex;
+  gap: var(--hk-space-5);
+  flex-wrap: wrap;
+  justify-content: center;
+  font-size: var(--hk-text-lg);
+}
+.sp-watcher {
+  width: 12rem;
+  height: auto;
+}
+.sp-watcher--away {
+  opacity: 0.55;
+}
+.sp-watcher--warning {
+  filter: drop-shadow(0 0 1.5rem var(--hk-color-warning));
+}
+.sp-watcher--watching {
+  filter: drop-shadow(0 0 2rem var(--hk-color-danger));
+}
+.sp-phase {
+  width: min(32rem, 90vw);
+  height: 0.75rem;
+  background: var(--hk-color-surface);
+  border: 2px solid var(--hk-color-border);
+  border-radius: var(--hk-radius-full);
+  overflow: hidden;
+}
+.sp-phase > div {
+  height: 100%;
+  background: var(--hk-color-accent);
+}
+.sp-levels {
+  display: grid;
+  gap: var(--hk-space-3);
+  width: min(40rem, 92vw);
+}
+.sp-level {
+  display: grid;
+  grid-template-columns: 9rem 1fr;
+  align-items: center;
+  gap: var(--hk-space-3);
+  text-align: left;
+}
+.sp-level__bar {
+  height: 1.75rem;
+  background: var(--hk-color-surface);
+  border: 2px solid var(--hk-color-border);
+  border-radius: var(--hk-radius-full);
+  overflow: hidden;
+}
+.sp-level__bar > div {
+  height: 100%;
+  background: var(--player-color);
+}
+.sp-points {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--hk-space-3);
+  justify-content: center;
+}
+.sp-winner-ghost {
+  transform: scale(1.6);
+  margin: var(--hk-space-5);
+}

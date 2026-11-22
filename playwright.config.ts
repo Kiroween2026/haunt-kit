@@ -33,6 +33,12 @@ export default defineConfig({
       gracefulShutdown: { signal: "SIGTERM", timeout: 5000 },
     },
     {
+      command: "node apps/seance-party/node_modules/vite/bin/vite.js apps/seance-party",
+      url: "http://localhost:5183/",
+      reuseExistingServer: !process.env.CI,
+      gracefulShutdown: { signal: "SIGTERM", timeout: 5000 },
+    },
+    {
       command: "node packages/host-sdk/node_modules/vite/bin/vite.js packages/host-sdk/demo",
       url: "http://localhost:5181/",
       reuseExistingServer: !process.env.CI,
