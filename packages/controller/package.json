@@ -10,6 +10,7 @@
     "typecheck": "tsc -p tsconfig.json"
   },
   "dependencies": {
+    "@haunt-kit/gestures": "workspace:*",
     "@haunt-kit/host-sdk": "workspace:*",
     "@haunt-kit/protocol": "workspace:*"
   },

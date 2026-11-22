@@ -1,11 +1,22 @@
-// Owner: Yadnesh. Detectors bundled into the phone controller.
+// Owner: Yadnesh. Detectors that run on the phone.
 //
-// TODO(Anish's gestures merge): import the catalog from @haunt-kit/gestures and list the
-// phone-side detectors here, e.g.
-//   import { catalog } from "@haunt-kit/gestures";
-//   export const PHONE_DETECTORS = ["shake", "flick", "spin", "flip", "hold-still"].map((n) => catalog[n]);
-// Until then the list is empty, and the pipeline falls back to raw frames for "still".
+// shake, flick, spin and flip are always on. hold-still only runs in the "still" view (see pipeline.ts).
+// tilt and scream are not here: they are continuous, so the phone sends raw frames in those views.
+// rep belongs to Steady, which runs on one phone in local mode.
 
 import type { Detector } from "@haunt-kit/protocol";
+import {
+  flickDetector,
+  flipDetector,
+  holdStillDetector,
+  shakeDetector,
+  spinDetector,
+} from "@haunt-kit/gestures/detectors";
 
-export const PHONE_DETECTORS: readonly Detector<unknown>[] = [];
+export const PHONE_DETECTORS: readonly Detector<unknown>[] = [
+  shakeDetector,
+  flickDetector,
+  spinDetector,
+  flipDetector,
+  holdStillDetector,
+];

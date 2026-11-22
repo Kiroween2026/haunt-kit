@@ -9,6 +9,9 @@ import { FrameBatcher } from "@haunt-kit/host-sdk";
 
 export type InputMode = "raw" | "events" | "off";
 
+/** Detectors that only make sense in one view. All other detectors run in every view except "wait". */
+const VIEW_ONLY: Record<string, ControlView[]> = { "hold-still": ["still"] };
+
 /** Detector names that can replace raw frames for a view. */
 const VIEW_DETECTORS: Partial<Record<ControlView, string[]>> = {
   still: ["hold-still"],
@@ -38,6 +41,7 @@ export type PipelineOutput = { frames: Sample[] | null; gestures: GestureEvent[]
 
 export class InputPipeline {
   private readonly running: { name: string; instance: ReturnType<Detector<unknown>["create"]> }[];
+  private view: ControlView = "wait";
   private readonly available: Set<string>;
   private readonly batcher = new FrameBatcher();
   private mode: InputMode = "off";
@@ -56,6 +60,7 @@ export class InputPipeline {
   }
 
   setView(view: ControlView): void {
+    this.view = view;
     const next = chooseInputMode(view, this.available, this.forceRaw);
     if (next !== this.mode) {
       this.batcher.clear();
@@ -69,6 +74,7 @@ export class InputPipeline {
     const gestures: GestureEvent[] = [];
     if (this.mode !== "off") {
       for (const d of this.running) {
+        if (VIEW_ONLY[d.name] && !VIEW_ONLY[d.name]!.includes(this.view)) continue;
         try {
           gestures.push(...d.instance.push(sample));
         } catch (e) {

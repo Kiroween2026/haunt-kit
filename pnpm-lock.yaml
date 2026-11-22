@@ -252,6 +252,9 @@ importers:
 
   packages/controller:
     dependencies:
+      '@haunt-kit/gestures':
+        specifier: workspace:*
+        version: link:../gestures
       '@haunt-kit/host-sdk':
         specifier: workspace:*
         version: link:../host-sdk

@@ -96,6 +96,15 @@ describe("InputPipeline", () => {
     expect(out.gestures).toEqual(expect.arrayContaining(["still", "shake", "moved"]));
   });
 
+  it("hold-still only runs in the still view", () => {
+    const quiet = Array.from({ length: 80 }, (_, i) => s(i * 33));
+    const p = new InputPipeline(detectors);
+    p.setView("tilt");
+    expect(run(p, quiet).gestures).not.toContain("still");
+    p.setView("still");
+    expect(run(p, quiet).gestures).toContain("still");
+  });
+
   it("raw mode sends every sample as frames and still reports gestures", () => {
     const p = new InputPipeline(detectors);
     p.setView("tilt");

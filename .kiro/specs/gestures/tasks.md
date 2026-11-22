@@ -1,5 +1,7 @@
 # Tasks: Gesture Engine & Ghost Recordings
 
+> Phases 3 and 4 (flick, spin, flip, scream, tap, rep, catalog, property tests, validation against recordings) were built by Yadnesh while Anish was unavailable. Anish: review them and change what you want.
+
 **Owner:** Anish Pant  
 **Component:** `packages/gestures`
 
@@ -44,15 +46,15 @@ _Goal: Deliver first playable minigame inputs (Ouija Planchette & Hold Still)._
 
 _Goal: Complete party game gestures and sound detection._
 
-- [ ] **Task 3.1: Flick Detector**
+- [x] **Task 3.1: Flick Detector**
   - Implement `src/detectors/flick.ts` detecting sharp acceleration impulses and reporting direction.
-- [ ] **Task 3.2: Spin Detector**
+- [x] **Task 3.2: Spin Detector**
   - Implement `src/detectors/spin.ts` tracking integrated rotation around screen normal (`gz` / `alpha`) up to 300°.
-- [ ] **Task 3.3: Flip Detector**
+- [x] **Task 3.3: Flip Detector**
   - Implement `src/detectors/flip.ts` detecting face-down orientation ($az < -7.0$ m/s²).
-- [ ] **Task 3.4: Scream Detector**
+- [x] **Task 3.4: Scream Detector**
   - Implement `src/detectors/scream.ts` measuring phone-side RMS sustained loudness over a duration window.
-- [ ] **Task 3.5: Tap Detector**
+- [x] **Task 3.5: Tap Detector**
   - Implement `src/detectors/tap.ts` forwarding touch tap events.
 
 ---
@@ -61,19 +63,19 @@ _Goal: Complete party game gestures and sound detection._
 
 _Goal: Physical therapy rep counter and mathematical verification._
 
-- [ ] **Task 4.1: Steady Rep Detector**
+- [x] **Task 4.1: Steady Rep Detector**
   - Implement `src/detectors/rep.ts` using gravity vector angle tracking, EMA smoothing, and hysteresis state machine.
   - Report rep count, range of motion (ROM) in degrees, and tempo warnings.
-- [ ] **Task 4.2: Gesture Catalog**
+- [x] **Task 4.2: Gesture Catalog**
   - Implement `src/catalog.ts` registering all 9 detectors with default configurations.
   - Export catalog and detector types from `src/index.ts`.
-- [ ] **Task 4.3: Property-Based Testing (PBT) Suite with fast-check**
+- [x] **Task 4.3: Property-Based Testing (PBT) Suite with fast-check**
   - Implement synthetic stream generators: `stillStreamGen`, `shakingStreamGen`, `rotatingStreamGen`, `repStreamGen`.
   - Invariant 1: Still or slightly noisy phone never fires shake, flick, or spin.
   - Invariant 2: Shake detector results are invariant under 3D rotation ($SO(3)$).
   - Invariant 3: Sample-rate invariance across 30 Hz to 120 Hz.
   - Invariant 4: Event timestamps are causally bounded ($t_{sample\_0} \le t_{event} \le t_{sample\_end}$).
   - Invariant 5: $N$ synthetic reps with noise count as exactly $N$; micro-motions never increment rep count.
-- [ ] **Task 4.4: Validation Against Real iPhone Recordings**
+- [x] **Task 4.4: Validation Against Real iPhone Recordings**
   - Run all detectors against benchmark recordings in `recordings/`.
   - Log any discovered bugs or calibration adjustments in `KIRO_LOG.md`.

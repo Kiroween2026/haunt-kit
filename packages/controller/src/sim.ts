@@ -173,9 +173,6 @@ function tick() {
   if (meter) meter.style.width = `${Math.round(Math.min(1, (s.rms ?? 0) * 2.5) * 100)}%`;
 }
 
-// Until Anish's detectors are bundled, keys also send the gesture event directly,
-// so games can be tested with no phone today.
-const sentDirect = PHONE_DETECTORS.length === 0;
 window.addEventListener("keydown", (e) => {
   if (e.target instanceof HTMLInputElement || e.repeat || !client) return;
   const k = SIM_KEYS.find((x) => x.key === e.key.toLowerCase());
@@ -185,17 +182,13 @@ window.addEventListener("keydown", (e) => {
   if (k.action === "tap") return client.sendGesture({ name: "tap", t });
   if (k.action === "hold") {
     model.holding = true;
-    if (sentDirect) client.sendGesture({ name: "still", t });
     return;
   }
+  // The motion goes through the same detectors as a real phone: shake, flick and spin events come from them.
   model.burst(k.action, t);
-  if (sentDirect) client.sendGesture({ name: k.action, t });
 });
 window.addEventListener("keyup", (e) => {
-  if (e.key.toLowerCase() === "h" && model.holding) {
-    model.holding = false;
-    if (sentDirect) client?.sendGesture({ name: "moved", t: performance.now() });
-  }
+  if (e.key.toLowerCase() === "h") model.holding = false;
 });
 
 joinScreen();
