@@ -80,8 +80,7 @@ export class ReplayPlayer {
     }
 
     // Sanitize speed multiplier: must be positive finite number, otherwise fallback to 1.0
-    const effectiveSpeed =
-      typeof speed === "number" && Number.isFinite(speed) && speed > 0 ? speed : 1.0;
+    const effectiveSpeed = typeof speed === "number" && Number.isFinite(speed) && speed > 0 ? speed : 1.0;
 
     this._isPlaying = true;
     let currentIndex = 0;

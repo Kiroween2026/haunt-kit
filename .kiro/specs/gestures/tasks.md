@@ -6,7 +6,8 @@
 ---
 
 ## Phase 1: Ghost Recordings Schema & Replay Player (Wed Nov 18)
-*Goal: Unblock Yadnesh (host-sdk MockTransport) and Viviana (seance-party lobby) with fake player capabilities.*
+
+_Goal: Unblock Yadnesh (host-sdk MockTransport) and Viviana (seance-party lobby) with fake player capabilities._
 
 - [ ] **Task 1.1: Zod Schema Definition & Validation**
   - Implement `src/recording/schema.ts` with `SampleSchema` and `RecordingSchema`.
@@ -24,7 +25,8 @@
 ---
 
 ## Phase 2: Core Detectors - Tilt, Shake, Hold-Still (Thu Nov 19)
-*Goal: Deliver first playable minigame inputs (Ouija Planchette & Hold Still).*
+
+_Goal: Deliver first playable minigame inputs (Ouija Planchette & Hold Still)._
 
 - [ ] **Task 2.1: Tilt Detector**
   - Implement `src/detectors/tilt.ts` with continuous normalized coordinates `(-1..1)` and configurable center dead zone.
@@ -39,7 +41,8 @@
 ---
 
 ## Phase 3: Secondary Detectors - Flick, Spin, Flip, Scream (Fri Nov 20)
-*Goal: Complete party game gestures and sound detection.*
+
+_Goal: Complete party game gestures and sound detection._
 
 - [ ] **Task 3.1: Flick Detector**
   - Implement `src/detectors/flick.ts` detecting sharp acceleration impulses and reporting direction.
@@ -55,7 +58,8 @@
 ---
 
 ## Phase 4: Rep Detector, Catalog, and PBT Suite (Sat Nov 21)
-*Goal: Physical therapy rep counter and mathematical verification.*
+
+_Goal: Physical therapy rep counter and mathematical verification._
 
 - [ ] **Task 4.1: Steady Rep Detector**
   - Implement `src/detectors/rep.ts` using gravity vector angle tracking, EMA smoothing, and hysteresis state machine.

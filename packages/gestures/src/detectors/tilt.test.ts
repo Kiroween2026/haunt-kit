@@ -1,10 +1,6 @@
 import { describe, expect, it } from "vitest";
 import type { Sample } from "@haunt-kit/protocol";
-import {
-  DEFAULT_TILT_CONFIG,
-  createTiltDetector,
-  tiltDetector,
-} from "./tilt";
+import { DEFAULT_TILT_CONFIG, createTiltDetector, tiltDetector } from "./tilt";
 import tableFlatRecording from "../../../../recordings/ghost-recording-table-flat-2026-11-17T17-28-41-306Z.json";
 
 function makeSample(overrides: Partial<Sample> = {}): Sample {
@@ -103,15 +99,11 @@ describe("Tilt Detector (Task 2.1)", () => {
     it("clamps values exceeding maxRollDeg and maxPitchDeg", () => {
       const detector = createTiltDetector({ smoothingFactor: 0 });
 
-      const extremeEvents = detector.push(
-        makeSample({ gamma: 85, beta: -120 })
-      );
+      const extremeEvents = detector.push(makeSample({ gamma: 85, beta: -120 }));
       expect(extremeEvents[0]!.data?.x).toBe(1.0);
       expect(extremeEvents[0]!.data?.y).toBe(-1.0);
 
-      const oppositeExtreme = detector.push(
-        makeSample({ gamma: -90, beta: 150 })
-      );
+      const oppositeExtreme = detector.push(makeSample({ gamma: -90, beta: 150 }));
       expect(oppositeExtreme[0]!.data?.x).toBe(-1.0);
       expect(oppositeExtreme[0]!.data?.y).toBe(1.0);
     });

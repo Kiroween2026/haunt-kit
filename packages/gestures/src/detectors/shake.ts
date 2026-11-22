@@ -57,11 +57,9 @@ export function createShakeDetector(customConfig?: Partial<ShakeConfig>) {
     ...customConfig,
   };
 
-  const threshold =
-    config.threshold > 0 ? config.threshold : DEFAULT_SHAKE_CONFIG.threshold;
+  const threshold = config.threshold > 0 ? config.threshold : DEFAULT_SHAKE_CONFIG.threshold;
   const minPeaks = Math.max(1, Math.floor(config.minPeaks));
-  const windowMs =
-    config.windowMs > 0 ? config.windowMs : DEFAULT_SHAKE_CONFIG.windowMs;
+  const windowMs = config.windowMs > 0 ? config.windowMs : DEFAULT_SHAKE_CONFIG.windowMs;
   const cooldownMs = Math.max(0, config.cooldownMs);
 
   let peaks: PeakRecord[] = [];
@@ -72,12 +70,7 @@ export function createShakeDetector(customConfig?: Partial<ShakeConfig>) {
   return {
     push(s: Sample): GestureEvent[] {
       const { ax, ay, az, t } = s;
-      if (
-        !Number.isFinite(ax) ||
-        !Number.isFinite(ay) ||
-        !Number.isFinite(az) ||
-        !Number.isFinite(t)
-      ) {
+      if (!Number.isFinite(ax) || !Number.isFinite(ay) || !Number.isFinite(az) || !Number.isFinite(t)) {
         return [];
       }
 
@@ -93,8 +86,7 @@ export function createShakeDetector(customConfig?: Partial<ShakeConfig>) {
       // 3. Track qualifying peak excursions
       let registeredNewPeak = false;
       if (mag > threshold) {
-        const timeSinceLastPeak =
-          lastPeakTime !== null ? t - lastPeakTime : Infinity;
+        const timeSinceLastPeak = lastPeakTime !== null ? t - lastPeakTime : Infinity;
 
         if (!inExcursion || timeSinceLastPeak >= MIN_PEAK_INTERVAL_MS) {
           peaks.push({ t, magnitude: mag });
@@ -113,8 +105,7 @@ export function createShakeDetector(customConfig?: Partial<ShakeConfig>) {
 
       // 4. Emit shake event if peak count requirement and cooldown are satisfied
       if (registeredNewPeak && peaks.length >= minPeaks) {
-        const cooldownElapsed =
-          lastEventTime === null || t - lastEventTime >= cooldownMs;
+        const cooldownElapsed = lastEventTime === null || t - lastEventTime >= cooldownMs;
 
         if (cooldownElapsed) {
           const intensity = Math.max(...peaks.map((p) => p.magnitude));

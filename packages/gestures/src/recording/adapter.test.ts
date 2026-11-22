@@ -34,11 +34,7 @@ const mockRecording: GhostRecording = {
     sampleRateHz: 60,
     recordedAt: "2026-11-17T17:47:51.372Z",
   },
-  samples: [
-    makeSample(0, 0.1, 0.2, 9.8),
-    makeSample(25, 0.3, 0.4, 9.9),
-    makeSample(60, 0.5, 0.6, 10.0),
-  ],
+  samples: [makeSample(0, 0.1, 0.2, 9.8), makeSample(25, 0.3, 0.4, 9.9), makeSample(60, 0.5, 0.6, 10.0)],
 };
 
 describe("GhostPlayerAdapter (createGhostPlayer)", () => {
@@ -153,19 +149,11 @@ describe("GhostPlayerAdapter (createGhostPlayer)", () => {
   });
 
   it("integrates seamlessly with a real Android recording from recordings/", () => {
-    const filePath = path.join(
-      recordingsDir,
-      "ghost-recording-android-slide-2026-11-17T17-53-27-552Z.json"
-    );
+    const filePath = path.join(recordingsDir, "ghost-recording-android-slide-2026-11-17T17-53-27-552Z.json");
     const raw = fs.readFileSync(filePath, "utf8");
     const recording = recordingSchema.parse(JSON.parse(raw));
 
-    const adapter = createGhostPlayer(
-      "ghost-slider",
-      "Android Slider Bot",
-      recording,
-      { speed: 2.0 }
-    );
+    const adapter = createGhostPlayer("ghost-slider", "Android Slider Bot", recording, { speed: 2.0 });
 
     expect(adapter.id).toBe("ghost-slider");
     expect(adapter.name).toBe("Android Slider Bot");

@@ -40,7 +40,7 @@ export function createGhostPlayer(
   id: string,
   name: string,
   recording: GhostRecording,
-  options?: GhostPlayerOptions
+  options?: GhostPlayerOptions,
 ): GhostPlayerAdapter {
   const player = new ReplayPlayer(recording);
 

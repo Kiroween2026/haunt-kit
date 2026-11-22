@@ -27,7 +27,6 @@ export type NodeRelay = {
 };
 
 export async function startNodeRelay(opts: NodeRelayOptions = {}): Promise<NodeRelay> {
-
   // The admin API only runs on loopback: never reachable from the network, even with a token.
   const adminEnabled =
     !opts.production && isLoopback(opts.host ?? "127.0.0.1") && !!opts.devToken && opts.devToken.length >= 16;

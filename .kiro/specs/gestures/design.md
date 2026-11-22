@@ -1,7 +1,7 @@
 # Design: Gesture Engine & Ghost Recordings
 
 **Component:** `packages/gestures`  
-**Owner:** Anish Pant  
+**Owner:** Anish Pant
 
 ---
 
@@ -98,12 +98,14 @@ export class TimedBuffer<T extends { t: number }> {
 ## 3. Mathematical Specifications
 
 ### 3.1. Shake Detection
+
 1. Compute magnitude: $m(t) = \sqrt{a_x^2 + a_y^2 + a_z^2}$.
 2. Remove mean/gravity: centered around $9.81$ m/s².
 3. Count zero-crossings or peak excursions where $m(t) > \text{threshold}$.
 4. If count $\ge \text{minPeaks}$ within $\text{windowMs}$ and time since last event $> \text{cooldownMs}$, emit `shake`.
 
 ### 3.2. Rep Detection (Steady)
+
 1. Projection of gravity vector onto calibrated axis gives current inclination angle $\theta(t)$.
 2. Smoothing with exponential moving average (EMA): $\bar{\theta}_t = \alpha \theta_t + (1-\alpha) \bar{\theta}_{t-1}$.
 3. State machine:
@@ -118,6 +120,7 @@ export class TimedBuffer<T extends { t: number }> {
 ## 4. Ghost Recording & Replay Design
 
 ### 4.1. Zod Schema
+
 ```ts
 import { z } from "zod";
 
@@ -150,6 +153,7 @@ export type GhostRecording = z.infer<typeof RecordingSchema>;
 ```
 
 ### 4.2. Replay Player Contract
+
 ```ts
 export class ReplayPlayer {
   constructor(private recording: GhostRecording) {}
@@ -160,6 +164,7 @@ export class ReplayPlayer {
 ```
 
 ### 4.3. MockTransport Adapter for host-sdk
+
 ```ts
 export interface GhostPlayerAdapter {
   id: string;

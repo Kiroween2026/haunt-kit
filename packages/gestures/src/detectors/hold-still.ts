@@ -47,17 +47,12 @@ export function createHoldStillDetector(customConfig?: Partial<HoldStillConfig>)
   };
 
   const varianceThreshold =
-    config.varianceThreshold > 0
-      ? config.varianceThreshold
-      : DEFAULT_HOLD_STILL_CONFIG.varianceThreshold;
+    config.varianceThreshold > 0 ? config.varianceThreshold : DEFAULT_HOLD_STILL_CONFIG.varianceThreshold;
 
   const holdDurationMs =
-    config.holdDurationMs > 0
-      ? config.holdDurationMs
-      : DEFAULT_HOLD_STILL_CONFIG.holdDurationMs;
+    config.holdDurationMs > 0 ? config.holdDurationMs : DEFAULT_HOLD_STILL_CONFIG.holdDurationMs;
 
-  const windowMs =
-    config.windowMs && config.windowMs > 0 ? config.windowMs : holdDurationMs;
+  const windowMs = config.windowMs && config.windowMs > 0 ? config.windowMs : holdDurationMs;
 
   let buffer: SamplePoint[] = [];
   let isHoldingStill = false;
@@ -65,12 +60,7 @@ export function createHoldStillDetector(customConfig?: Partial<HoldStillConfig>)
   return {
     push(s: Sample): GestureEvent[] {
       const { ax, ay, az, t } = s;
-      if (
-        !Number.isFinite(ax) ||
-        !Number.isFinite(ay) ||
-        !Number.isFinite(az) ||
-        !Number.isFinite(t)
-      ) {
+      if (!Number.isFinite(ax) || !Number.isFinite(ay) || !Number.isFinite(az) || !Number.isFinite(t)) {
         return [];
       }
 

@@ -30,6 +30,20 @@ import {
   type TiltConfig,
 } from "./index";
 
+// Compile-time check that every public type is exported.
+type _PublicTypes = [
+  GhostPlayerAdapter,
+  GhostPlayerOptions,
+  GhostRecording,
+  HoldStillConfig,
+  PlayRealtimeOptions,
+  RecordingMeta,
+  RecordingOS,
+  Sample,
+  ShakeConfig,
+  TiltConfig,
+];
+
 describe("@haunt-kit/gestures public exports", () => {
   it("exports package name", () => {
     expect(PACKAGE_NAME).toBe("@haunt-kit/gestures");
@@ -128,7 +142,7 @@ describe("@haunt-kit/gestures public exports", () => {
     const adapter: GhostPlayerAdapter = createGhostPlayer(
       "ghost-export-1",
       "Public Export Bot",
-      mockRecording
+      mockRecording,
     );
 
     expect(adapter.id).toBe("ghost-export-1");

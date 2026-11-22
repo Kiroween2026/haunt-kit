@@ -380,10 +380,7 @@ describe("ReplayPlayer", () => {
 
   describe("Integration with real Android recordings", () => {
     it("can synchronously play all 301 samples from a real Android recording", () => {
-      const filePath = path.join(
-        recordingsDir,
-        "ghost-recording-table-flat-2026-11-17T17-28-41-306Z.json"
-      );
+      const filePath = path.join(recordingsDir, "ghost-recording-table-flat-2026-11-17T17-28-41-306Z.json");
       const raw = fs.readFileSync(filePath, "utf8");
       const recording = recordingSchema.parse(JSON.parse(raw));
 
@@ -403,7 +400,7 @@ describe("ReplayPlayer", () => {
     it("can play a real Android recording in real-time through fake timers", () => {
       const filePath = path.join(
         recordingsDir,
-        "ghost-recording-android-left-right-2026-11-17T17-47-51-393Z.json"
+        "ghost-recording-android-left-right-2026-11-17T17-47-51-393Z.json",
       );
       const raw = fs.readFileSync(filePath, "utf8");
       const recording = recordingSchema.parse(JSON.parse(raw));

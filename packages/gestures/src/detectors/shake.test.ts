@@ -1,10 +1,6 @@
 import { describe, expect, it } from "vitest";
 import type { Sample } from "@haunt-kit/protocol";
-import {
-  DEFAULT_SHAKE_CONFIG,
-  createShakeDetector,
-  shakeDetector,
-} from "./shake";
+import { DEFAULT_SHAKE_CONFIG, createShakeDetector, shakeDetector } from "./shake";
 import leftRightRecording from "../../../../recordings/ghost-recording-android-left-right-2026-11-17T17-47-51-393Z.json";
 import slideRecording from "../../../../recordings/ghost-recording-android-slide-2026-11-17T17-53-27-552Z.json";
 import tableFlatRecording from "../../../../recordings/ghost-recording-table-flat-2026-11-17T17-28-41-306Z.json";
@@ -159,8 +155,8 @@ describe("Shake Detector (Task 2.2)", () => {
       expect(eventsZ).toHaveLength(1);
 
       // All produce the same intensity
-      expect(eventsX[0]!.data?.intensity).toBeCloseTo(eventsY[0]!.data?.intensity!);
-      expect(eventsY[0]!.data?.intensity).toBeCloseTo(eventsZ[0]!.data?.intensity!);
+      expect(eventsX[0]!.data?.intensity).toBeCloseTo(eventsY[0]!.data!.intensity!);
+      expect(eventsY[0]!.data?.intensity).toBeCloseTo(eventsZ[0]!.data!.intensity!);
     });
 
     it("produces identical detection results under arbitrary 3D rotation matrix", () => {
@@ -177,9 +173,12 @@ describe("Shake Detector (Task 2.2)", () => {
       const pitch = Math.PI / 4;
       const roll = Math.PI / 3;
 
-      const cy = Math.cos(yaw), sy = Math.sin(yaw);
-      const cp = Math.cos(pitch), sp = Math.sin(pitch);
-      const cr = Math.cos(roll), sr = Math.sin(roll);
+      const cy = Math.cos(yaw),
+        sy = Math.sin(yaw);
+      const cp = Math.cos(pitch),
+        sp = Math.sin(pitch);
+      const cr = Math.cos(roll),
+        sr = Math.sin(roll);
 
       const R = [
         [cy * cp, cy * sp * sr - sy * cr, cy * sp * cr + sy * sr],
@@ -203,10 +202,7 @@ describe("Shake Detector (Task 2.2)", () => {
       expect(eventsBase).toHaveLength(1);
       expect(eventsRotated).toHaveLength(1);
       expect(eventsRotated[0]!.t).toBe(eventsBase[0]!.t);
-      expect(eventsRotated[0]!.data?.intensity).toBeCloseTo(
-        eventsBase[0]!.data?.intensity!,
-        3
-      );
+      expect(eventsRotated[0]!.data?.intensity).toBeCloseTo(eventsBase[0]!.data!.intensity!, 3);
     });
   });
 
@@ -347,7 +343,7 @@ describe("Shake Detector (Task 2.2)", () => {
 
       // Continuous streaming of 5,000 samples
       for (let i = 0; i < 5000; i++) {
-        const ax = (i % 50 === 0) ? 22 : 0;
+        const ax = i % 50 === 0 ? 22 : 0;
         detector.push(makeSample({ t: i * 16, ax, ay: 0, az: 9.81 }));
       }
 

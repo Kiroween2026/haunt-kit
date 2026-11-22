@@ -27,6 +27,7 @@ export interface Detector<Config> {
 ```
 
 ### 2.1. Tilt (`tilt`)
+
 - **Input:** `beta` (pitch), `gamma` (roll), or gravity vector projection from `ax, ay, az`.
 - **Output:** Continuous normalized coordinates `x` (-1.0 to 1.0, left/right) and `y` (-1.0 to 1.0, forward/back).
 - **Dead Zone:** Center dead zone where output is clamped to (0, 0) to avoid jitter.
@@ -37,6 +38,7 @@ export interface Detector<Config> {
   - `smoothingFactor`: 0.2
 
 ### 2.2. Shake (`shake`)
+
 - **Input:** Acceleration magnitude `|a| = sqrt(ax² + ay² + az²)`.
 - **Output:** Fires event `shake` with `intensity` when magnitude crosses a threshold $N$ times within a sliding window.
 - **Invariant:** Must be rotation-invariant in 3D (independent of phone orientation).
@@ -47,6 +49,7 @@ export interface Detector<Config> {
   - `cooldownMs`: 400 ms
 
 ### 2.3. Flick (`flick`)
+
 - **Input:** Sharp high-derivative linear acceleration impulse.
 - **Output:** Event `flick` with `direction` (0: left, 1: right, 2: up, 3: down, 4: forward) and `magnitude`.
 - **Config Defaults:**
@@ -55,6 +58,7 @@ export interface Detector<Config> {
   - `cooldownMs`: 500 ms
 
 ### 2.4. Spin (`spin`)
+
 - **Input:** Rotation rate `gz` (around screen normal axis) or integrated orientation yaw `alpha`.
 - **Output:** Fires event `spin` with `direction` (1 for clockwise, -1 for counter-clockwise) when integrated rotation passes 300° within 1.0 second.
 - **Config Defaults:**
@@ -63,6 +67,7 @@ export interface Detector<Config> {
   - `cooldownMs`: 800 ms
 
 ### 2.5. Hold-Still (`hold-still`)
+
 - **Input:** Acceleration vector variance over a sliding temporal window.
 - **Output:**
   - Fires `hold-still` (state: 1) when variance stays below threshold for `holdDurationMs`.
@@ -72,6 +77,7 @@ export interface Detector<Config> {
   - `holdDurationMs`: 1200 ms
 
 ### 2.6. Flip (`flip`)
+
 - **Input:** Gravitational acceleration along z-axis (`az`).
 - **Output:** Fires `flip` with `faceDown: 1` when $az < -7.0$ m/s² and holds for 200 ms; fires `faceDown: 0` when flipped back.
 - **Config Defaults:**
@@ -79,6 +85,7 @@ export interface Detector<Config> {
   - `holdMs`: 200 ms
 
 ### 2.7. Scream (`scream`)
+
 - **Input:** `rms` (0..1 audio loudness calculated client-side on the phone).
 - **Output:** Fires `scream` with `peak` and `average` when RMS stays above threshold for minimum duration.
 - **Config Defaults:**
@@ -87,10 +94,12 @@ export interface Detector<Config> {
   - `cooldownMs`: 1000 ms
 
 ### 2.8. Tap (`tap`)
+
 - **Input:** Screen touch event forwarded as synthetic sample or touch trigger.
 - **Output:** Fires `tap` with `x, y` normalized screen coordinates.
 
 ### 2.9. Rep Counter for Steady (`rep`)
+
 - **Input:** Gravitational pitch/roll vector angle from calibrated baseline.
 - **Output:** Fires `rep` with `count`, `romDeg` (range of motion in degrees), `tempoSec`, `fullRange` (0 or 1), `tooFast` (0 or 1).
 - **Logic:** Two-phase state machine (inflection upward passing threshold, inflection downward returning to rest) with hysteresis to prevent double-counting.
@@ -106,7 +115,9 @@ export interface Detector<Config> {
 Others (Yadnesh for `host-sdk` MockTransport, Viviana for `seance-party` lobby) depend on this by **Thu Nov 19**.
 
 ### 3.1. File Schema (Zod)
+
 Recording files stored in `recordings/*.json`:
+
 ```ts
 {
   meta: {
@@ -121,6 +132,7 @@ Recording files stored in `recordings/*.json`:
 ```
 
 ### 3.2. Replay Player
+
 - Replay modes:
   1. `realtime`: emits samples on monotonic timer matching `sample.t`.
   2. `speed(multiplier)`: fast or slow motion.
@@ -128,7 +140,9 @@ Recording files stored in `recordings/*.json`:
 - Loop and pause controls.
 
 ### 3.3. MockTransport Adapter Interface
+
 A minimal adapter interface that `@haunt-kit/host-sdk` can consume to simulate a connected phone:
+
 ```ts
 export interface GhostPlayerAdapter {
   id: string;
@@ -143,6 +157,7 @@ export interface GhostPlayerAdapter {
 ## 4. Property-Based Testing (PBT) Requirements
 
 Using `fast-check` to mathematically prove invariants:
+
 1. **Stillness Invariant:** A stream with small noise ($|a - 9.81| < 0.2$, $|\omega| < 2.0$) NEVER triggers `shake`, `flick`, or `spin`.
 2. **Rotation Invariance:** Rotating any acceleration stream by an arbitrary 3D rotation matrix $R \in SO(3)$ produces the exact same `shake` event timestamps.
 3. **Sampling Rate Invariance:** Resampling a gesture stream between 30 Hz and 120 Hz produces identical detection counts.

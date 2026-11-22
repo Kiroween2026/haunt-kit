@@ -1,10 +1,7 @@
+import type { GestureEvent } from "@haunt-kit/protocol";
 import { describe, expect, it } from "vitest";
 import type { Sample } from "@haunt-kit/protocol";
-import {
-  DEFAULT_HOLD_STILL_CONFIG,
-  createHoldStillDetector,
-  holdStillDetector,
-} from "./hold-still";
+import { DEFAULT_HOLD_STILL_CONFIG, createHoldStillDetector, holdStillDetector } from "./hold-still";
 import leftRightRecording from "../../../../recordings/ghost-recording-android-left-right-2026-11-17T17-47-51-393Z.json";
 import tableFlatRecording from "../../../../recordings/ghost-recording-table-flat-2026-11-17T17-28-41-306Z.json";
 
@@ -122,9 +119,7 @@ describe("Hold-Still Detector (Task 2.3)", () => {
       }
 
       // Sudden movement sample at t = 1250 ms
-      const breakEvents = detector.push(
-        makeSample({ t: 1250, ax: 15.0, ay: 10.0, az: 0 })
-      );
+      const breakEvents = detector.push(makeSample({ t: 1250, ax: 15.0, ay: 10.0, az: 0 }));
       expect(breakEvents).toHaveLength(1);
       expect(breakEvents[0]!.name).toBe("hold-still-broken");
       expect(breakEvents[0]!.t).toBe(1250);
@@ -141,16 +136,12 @@ describe("Hold-Still Detector (Task 2.3)", () => {
       }
 
       // First movement breaks stillness
-      const breakEvent = detector.push(
-        makeSample({ t: 1250, ax: 15.0, ay: 10.0, az: 0 })
-      );
+      const breakEvent = detector.push(makeSample({ t: 1250, ax: 15.0, ay: 10.0, az: 0 }));
       expect(breakEvent).toHaveLength(1);
 
       // Continued movement: no repeated broken events
       for (let t = 1300; t <= 1600; t += 50) {
-        const events = detector.push(
-          makeSample({ t, ax: 12.0, ay: 8.0, az: 2.0 })
-        );
+        const events = detector.push(makeSample({ t, ax: 12.0, ay: 8.0, az: 2.0 }));
         expect(events).toHaveLength(0);
       }
     });
@@ -191,9 +182,7 @@ describe("Hold-Still Detector (Task 2.3)", () => {
         const noiseY = Math.cos(t * 0.1) * 0.08;
         const noiseZ = Math.sin(t * 0.2) * 0.08;
 
-        const ev = detector.push(
-          makeSample({ t, ax: noiseX, ay: noiseY, az: 9.81 + noiseZ })
-        );
+        const ev = detector.push(makeSample({ t, ax: noiseX, ay: noiseY, az: 9.81 + noiseZ }));
         if (t === 1200) {
           expect(ev).toHaveLength(1);
           expect(ev[0]!.name).toBe("hold-still");
@@ -237,7 +226,7 @@ describe("Hold-Still Detector (Task 2.3)", () => {
 
     it("detects hold-still followed by hold-still-broken on real left-right recording as motion pauses and resumes", () => {
       const detector = createHoldStillDetector();
-      const detectedEvents: any[] = [];
+      const detectedEvents: GestureEvent[] = [];
 
       for (const sample of leftRightRecording.samples) {
         const events = detector.push(sample as Sample);
@@ -277,9 +266,7 @@ describe("Hold-Still Detector (Task 2.3)", () => {
       }
 
       // Verify detector still functions properly
-      const breakEvent = detector.push(
-        makeSample({ t: 80050, ax: 20, ay: 0, az: 0 })
-      );
+      const breakEvent = detector.push(makeSample({ t: 80050, ax: 20, ay: 0, az: 0 }));
       expect(breakEvent).toHaveLength(1);
       expect(breakEvent[0]!.name).toBe("hold-still-broken");
     });

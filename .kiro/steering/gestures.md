@@ -8,15 +8,15 @@ Owner: **Anish Pant** (`packages/gestures`, `recordings/`, `apps/steady`).
 
 All detectors receive raw or normalized `Sample` streams as defined in `@haunt-kit/protocol`:
 
-| Field | Description | Unit | Range / Reference |
-|---|---|---|---|
-| `t` | Monotonic timestamp | milliseconds (ms) | `t >= 0` |
-| `ax, ay, az` | Acceleration including gravity | m/s² | Earth gravity at rest is ~9.81 m/s² |
-| `gx, gy, gz` | Rotation rate | degrees/second (deg/s) | Screen/body axes |
-| `alpha` | Compass heading / yaw around Z | degrees (deg) | 0° to 360° |
-| `beta` | Pitch (front-to-back tilt) | degrees (deg) | -180° to 180° |
-| `gamma` | Roll (left-to-right tilt) | degrees (deg) | -90° to 90° |
-| `rms` | Audio loudness (RMS calculated on phone) | unitless | 0.0 to 1.0 (clamped) |
+| Field        | Description                              | Unit                   | Range / Reference                   |
+| ------------ | ---------------------------------------- | ---------------------- | ----------------------------------- |
+| `t`          | Monotonic timestamp                      | milliseconds (ms)      | `t >= 0`                            |
+| `ax, ay, az` | Acceleration including gravity           | m/s²                   | Earth gravity at rest is ~9.81 m/s² |
+| `gx, gy, gz` | Rotation rate                            | degrees/second (deg/s) | Screen/body axes                    |
+| `alpha`      | Compass heading / yaw around Z           | degrees (deg)          | 0° to 360°                          |
+| `beta`       | Pitch (front-to-back tilt)               | degrees (deg)          | -180° to 180°                       |
+| `gamma`      | Roll (left-to-right tilt)                | degrees (deg)          | -90° to 90°                         |
+| `rms`        | Audio loudness (RMS calculated on phone) | unitless               | 0.0 to 1.0 (clamped)                |
 
 ---
 

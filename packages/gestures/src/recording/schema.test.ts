@@ -75,9 +75,15 @@ describe("recordingMetaSchema", () => {
   });
 
   it("rejects invalid ISO 8601 timestamps", () => {
-    expect(recordingMetaSchema.safeParse({ ...sampleValidMeta, recordedAt: "not-a-date" }).success).toBe(false);
-    expect(recordingMetaSchema.safeParse({ ...sampleValidMeta, recordedAt: "2026/11/17 17:47:51" }).success).toBe(false);
-    expect(recordingMetaSchema.safeParse({ ...sampleValidMeta, recordedAt: "2026-11-17" }).success).toBe(false);
+    expect(recordingMetaSchema.safeParse({ ...sampleValidMeta, recordedAt: "not-a-date" }).success).toBe(
+      false,
+    );
+    expect(
+      recordingMetaSchema.safeParse({ ...sampleValidMeta, recordedAt: "2026/11/17 17:47:51" }).success,
+    ).toBe(false);
+    expect(recordingMetaSchema.safeParse({ ...sampleValidMeta, recordedAt: "2026-11-17" }).success).toBe(
+      false,
+    );
   });
 
   it("exports PascalCase alias RecordingMetaSchema", () => {
@@ -89,10 +95,7 @@ describe("recordingSchema", () => {
   it("accepts valid ghost recordings with samples", () => {
     const validRecording: GhostRecording = {
       meta: sampleValidMeta,
-      samples: [
-        sampleValidSample,
-        { ...sampleValidSample, t: 16, az: 9.85, rms: undefined },
-      ],
+      samples: [sampleValidSample, { ...sampleValidSample, t: 16, az: 9.85, rms: undefined }],
     };
 
     const parsed = recordingSchema.parse(validRecording);
@@ -111,7 +114,7 @@ describe("recordingSchema", () => {
       recordingSchema.safeParse({
         meta: sampleValidMeta,
         samples: [badSample],
-      }).success
+      }).success,
     ).toBe(false);
   });
 
@@ -120,14 +123,14 @@ describe("recordingSchema", () => {
       recordingSchema.safeParse({
         meta: sampleValidMeta,
         samples: [{ ...sampleValidSample, az: Number.NaN }],
-      }).success
+      }).success,
     ).toBe(false);
 
     expect(
       recordingSchema.safeParse({
         meta: sampleValidMeta,
         samples: [{ ...sampleValidSample, ax: Number.POSITIVE_INFINITY }],
-      }).success
+      }).success,
     ).toBe(false);
   });
 
@@ -136,14 +139,14 @@ describe("recordingSchema", () => {
       recordingSchema.safeParse({
         meta: sampleValidMeta,
         samples: [{ ...sampleValidSample, rms: 1.05 }],
-      }).success
+      }).success,
     ).toBe(false);
 
     expect(
       recordingSchema.safeParse({
         meta: sampleValidMeta,
         samples: [{ ...sampleValidSample, rms: -0.1 }],
-      }).success
+      }).success,
     ).toBe(false);
   });
 
