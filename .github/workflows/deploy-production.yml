@@ -41,7 +41,15 @@ jobs:
           echo "wss=${url/https:/wss:}" >> "$GITHUB_OUTPUT"
 
       - name: Test the live relay
-        run: pnpm exec tsx packages/relay/src/node/smoke.ts "${{ steps.relay.outputs.wss }}"
+        run: |
+          # A brand-new *.workers.dev address can take a minute or two to appear in DNS, so retry.
+          for try in $(seq 1 24); do
+            if pnpm exec tsx packages/relay/src/node/smoke.ts "${{ steps.relay.outputs.wss }}"; then exit 0; fi
+            echo "not reachable yet (try $try of 24), waiting 10 s"
+            sleep 10
+          done
+          echo "::error::The live relay never became reachable"
+          exit 1
 
       - name: Deploy controller, Séance Party and Steady (Pages, production)
         env:
