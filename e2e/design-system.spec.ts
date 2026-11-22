@@ -3,7 +3,7 @@ import { expect, test } from "@playwright/test";
 
 const UI = "http://localhost:5182/";
 
-for (const theme of ["haunted", "lantern"] as const) {
+for (const theme of ["haunted", "lantern", "contrast"] as const) {
   test.describe(`design system, ${theme} theme`, () => {
     test("has no accessibility violations (WCAG 2 A and AA, including rendered color contrast)", async ({
       page,

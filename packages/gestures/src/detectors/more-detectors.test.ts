@@ -234,6 +234,26 @@ describe("rep", () => {
     expect(run(createRepDetector(), sideways).filter((e) => e.name === "rep")).toHaveLength(3);
   });
 
+  it("reports its status for the live screen: calibration, angle, count", () => {
+    const d = createRepDetector();
+    expect(d.status()).toEqual({ calibrated: false, calibration: 0, angleDeg: 0, moving: false, count: 0 });
+    const stream = repStream({ hz: 60, seconds: 1, reps: 2, peakDeg: 90, repSec: 2.4, restSec: 1 });
+    const seen = { half: false, peak: 0, moving: false };
+    for (const s of stream) {
+      d.push(s);
+      const st = d.status();
+      if (!st.calibrated && st.calibration > 0.45 && st.calibration < 0.55) seen.half = true;
+      seen.peak = Math.max(seen.peak, st.angleDeg);
+      if (st.moving) seen.moving = true;
+    }
+    expect(seen.half).toBe(true);
+    expect(seen.peak).toBeGreaterThan(80);
+    expect(seen.moving).toBe(true);
+    expect(d.status()).toMatchObject({ calibrated: true, calibration: 1, count: 2, moving: false });
+    d.reset();
+    expect(d.status().calibrated).toBe(false);
+  });
+
   it("uses documented defaults", () => {
     expect(DEFAULT_REP_CONFIG).toMatchObject({
       minRomDeg: 45,

@@ -62,6 +62,10 @@ export class MotionSampler {
   private motion: RawMotion | null = null;
   private orientation: RawOrientation | null = null;
   private readonly onMotion = (e: DeviceMotionEvent) => {
+    // A browser with no motion sensors (desktop Chrome) still fires one event, with every value null.
+    // That is not data: ignore it, so `receiving` only becomes true on a device that really has sensors.
+    const a = e.accelerationIncludingGravity;
+    if (!a || (a.x === null && a.y === null && a.z === null)) return;
     this.motion = {
       accelerationIncludingGravity: e.accelerationIncludingGravity,
       rotationRate: e.rotationRate,

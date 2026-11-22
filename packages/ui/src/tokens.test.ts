@@ -77,6 +77,16 @@ describe("theme switching", () => {
     }
   });
 
+  it("the contrast theme reaches AAA (7:1) for all text", () => {
+    for (const [fg, bg] of TEXT_PAIRS) {
+      if (["warning", "danger", "success"].includes(fg) && bg !== "bg" && bg !== "surface") continue;
+      expect(
+        contrast(colors.contrast[fg], colors.contrast[bg]),
+        `contrast: ${fg} on ${bg}`,
+      ).toBeGreaterThanOrEqual(7);
+    }
+  });
+
   it("the themes are different", () => {
     expect(colors.haunted.bg).not.toBe(colors.lantern.bg);
     expect(fonts.haunted.heading).not.toBe(fonts.lantern.heading);

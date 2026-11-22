@@ -69,6 +69,7 @@ export type {
   ScreamConfig,
   TapConfig,
   RepConfig,
+  RepStatus,
   DoubleShakeConfig,
 } from "./detectors";
 

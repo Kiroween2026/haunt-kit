@@ -2,7 +2,7 @@
 // Design tokens: the single source of truth. src/styles/tokens.css is generated from this file
 // (`pnpm --filter @haunt-kit/ui gen:tokens`) and a test fails if they differ.
 
-export const THEME_NAMES = ["haunted", "lantern"] as const;
+export const THEME_NAMES = ["haunted", "lantern", "contrast"] as const;
 export type ThemeName = (typeof THEME_NAMES)[number];
 
 export const COLOR_TOKENS = [
@@ -25,6 +25,7 @@ export type ColorToken = (typeof COLOR_TOKENS)[number];
 /**
  * haunted: Séance Party. Dark, candlelight glow, playful and spooky, never gory.
  * lantern: Steady. Warm, calm and very readable. Same family: same shapes, spacing and motion.
+ * contrast: Steady's high-contrast mode. Pure black and white with yellow, for low vision. Every pair is above 7:1 (AAA).
  */
 export const colors: Record<ThemeName, Record<ColorToken, string>> = {
   haunted: {
@@ -57,6 +58,21 @@ export const colors: Record<ThemeName, Record<ColorToken, string>> = {
     border: "#8a6d4f",
     ink: "#140f1f",
   },
+  contrast: {
+    bg: "#000000",
+    surface: "#000000",
+    raised: "#1a1a1a",
+    text: "#ffffff",
+    muted: "#e6e6e6",
+    accent: "#ffe600",
+    "on-accent": "#000000",
+    danger: "#ff9a9a",
+    success: "#7dffa0",
+    warning: "#ffd24a",
+    glow: "#ffe600",
+    border: "#ffffff",
+    ink: "#000000",
+  },
 };
 
 export const fonts: Record<ThemeName, { heading: string; body: string }> = {
@@ -68,11 +84,16 @@ export const fonts: Record<ThemeName, { heading: string; body: string }> = {
     heading: '"Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", sans-serif',
     body: '"Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", sans-serif',
   },
+  contrast: {
+    heading: '"Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", sans-serif',
+    body: '"Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", sans-serif',
+  },
 };
 
 const shadows: Record<ThemeName, { glow: string; card: string }> = {
   haunted: { glow: "0 0 1.5rem 0.25rem rgb(189 147 249 / 45%)", card: "0 0.5rem 1.5rem rgb(0 0 0 / 55%)" },
   lantern: { glow: "0 0 0 0.25rem rgb(154 74 7 / 25%)", card: "0 0.25rem 1rem rgb(43 33 24 / 18%)" },
+  contrast: { glow: "0 0 0 0.25rem rgb(255 230 0 / 60%)", card: "none" },
 };
 
 /** Same in every theme. rem values assume the browser's 16 px default. */

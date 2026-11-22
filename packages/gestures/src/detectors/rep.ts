@@ -83,6 +83,7 @@ export function createRepDetector(customConfig?: Partial<RepConfig>) {
   let moveStart = 0;
   let peak = 0;
   let count = 0;
+  let lastT = 0;
 
   const restartCalibration = () => {
     calStart = null;
@@ -104,6 +105,7 @@ export function createRepDetector(customConfig?: Partial<RepConfig>) {
       const { t } = s;
       if (![t, s.ax, s.ay, s.az].every(Number.isFinite)) return [];
       if (prevT !== null && t < prevT) clearAll();
+      lastT = t;
       const v = unit(s.ax, s.ay, s.az);
       if (!v) return [];
 
@@ -161,7 +163,34 @@ export function createRepDetector(customConfig?: Partial<RepConfig>) {
     reset(): void {
       clearAll();
     },
+    /** For the live screen: where the phone is now, and how far calibration has got. */
+    status(): RepStatus {
+      return {
+        calibrated: rest !== null,
+        calibration: rest
+          ? 1
+          : calStart === null || calibrationMs === 0
+            ? 0
+            : Math.min(1, Math.max(0, (lastT - calStart) / calibrationMs)),
+        angleDeg: rest ? smooth : 0,
+        moving,
+        count,
+      };
+    },
   };
+}
+
+/** What the rep detector knows right now. */
+export interface RepStatus {
+  calibrated: boolean;
+  /** 0 to 1 while the phone is held still at the start position. */
+  calibration: number;
+  /** Smoothed angle from the start position, in degrees. */
+  angleDeg: number;
+  /** A movement is under way (the angle is above the start line). */
+  moving: boolean;
+  /** Reps counted so far. */
+  count: number;
 }
 
 export const repDetector = {

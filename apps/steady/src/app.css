@@ -1,0 +1,151 @@
+/* Owner: Anish (built by Yadnesh while Anish is unavailable). Layout only: colors, type and motion come from @haunt-kit/ui. */
+
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+}
+.st-app {
+  min-height: 100%;
+  max-width: 40rem;
+  margin: 0 auto;
+  padding: var(--hk-space-4);
+  display: grid;
+  align-content: start;
+  gap: var(--hk-space-4);
+}
+.st-app h1 {
+  font-size: var(--hk-text-xl);
+  margin: 0;
+}
+.st-stack {
+  display: grid;
+  gap: var(--hk-space-3);
+}
+.st-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--hk-space-3);
+  align-items: center;
+}
+.st-note {
+  color: var(--hk-color-muted);
+  margin: 0;
+}
+.st-list {
+  margin: 0;
+  padding-left: var(--hk-space-4);
+  display: grid;
+  gap: var(--hk-space-2);
+}
+.st-toggle {
+  display: flex;
+  align-items: center;
+  gap: var(--hk-space-3);
+  min-height: var(--hk-target);
+}
+.st-toggle input {
+  width: 1.75rem;
+  height: 1.75rem;
+  accent-color: var(--hk-color-accent);
+}
+.st-count {
+  font-family: var(--hk-font-heading);
+  font-size: 9rem;
+  font-weight: 800;
+  line-height: 1;
+  text-align: center;
+  margin: 0;
+}
+.st-feedback {
+  min-height: 2.5rem;
+  text-align: center;
+  font-size: var(--hk-text-lg);
+  font-weight: 700;
+  margin: 0;
+}
+.st-feedback--too-fast,
+.st-feedback--partial {
+  color: var(--hk-color-warning);
+}
+.st-feedback--good {
+  color: var(--hk-color-success);
+}
+.st-gauge {
+  position: relative;
+  height: 2.5rem;
+  background: var(--hk-color-surface);
+  border: 2px solid var(--hk-color-border);
+  border-radius: var(--hk-radius-full);
+  overflow: hidden;
+}
+.st-gauge__fill {
+  height: 100%;
+  background: var(--hk-color-accent);
+}
+.st-gauge__mark {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  background: var(--hk-color-text);
+}
+.st-gauge__labels {
+  display: flex;
+  justify-content: space-between;
+  color: var(--hk-color-muted);
+}
+.st-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.st-table th,
+.st-table td {
+  text-align: left;
+  padding: var(--hk-space-2);
+  border-bottom: 1px solid var(--hk-color-border);
+}
+.st-table caption {
+  text-align: left;
+  font-weight: 800;
+  padding-bottom: var(--hk-space-2);
+}
+.st-report {
+  background: Canvas;
+  color: CanvasText;
+  padding: var(--hk-space-4);
+  border-radius: var(--hk-radius-md);
+  border: 2px solid var(--hk-color-border);
+}
+.st-report h2,
+.st-report h3 {
+  color: CanvasText;
+}
+.st-report th,
+.st-report td,
+.st-report caption {
+  border-color: GrayText;
+  color: CanvasText;
+}
+.st-voice-only {
+  display: grid;
+  gap: var(--hk-space-4);
+  justify-items: center;
+  text-align: center;
+}
+
+@media print {
+  .st-noprint {
+    display: none !important;
+  }
+  .hk-theme,
+  .st-app {
+    background: Canvas;
+    color: CanvasText;
+  }
+  .st-report {
+    border: 0;
+    padding: 0;
+  }
+}

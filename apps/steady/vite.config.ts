@@ -1,7 +1,8 @@
-import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
+import { defineConfig } from "vite";
 
 export default defineConfig({
   plugins: [react()],
-  server: { host: true },
+  server: { host: true, port: 5184, strictPort: true, allowedHosts: [".trycloudflare.com"] },
+  preview: { port: 5184, strictPort: true },
 });

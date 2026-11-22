@@ -63,3 +63,23 @@
   --hk-shadow-glow: 0 0 0 0.25rem rgb(154 74 7 / 25%);
   --hk-shadow-card: 0 0.25rem 1rem rgb(43 33 24 / 18%);
 }
+
+[data-theme="contrast"] {
+  --hk-color-bg: #000000;
+  --hk-color-surface: #000000;
+  --hk-color-raised: #1a1a1a;
+  --hk-color-text: #ffffff;
+  --hk-color-muted: #e6e6e6;
+  --hk-color-accent: #ffe600;
+  --hk-color-on-accent: #000000;
+  --hk-color-danger: #ff9a9a;
+  --hk-color-success: #7dffa0;
+  --hk-color-warning: #ffd24a;
+  --hk-color-glow: #ffe600;
+  --hk-color-border: #ffffff;
+  --hk-color-ink: #000000;
+  --hk-font-heading: "Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --hk-font-body: "Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --hk-shadow-glow: 0 0 0 0.25rem rgb(255 230 0 / 60%);
+  --hk-shadow-card: none;
+}
