@@ -5,7 +5,8 @@ Deadline: **Fri Dec 4, 2:00 pm PT** (3:30 am IST Dec 5). Team target: **Thu Dec 
 ## Tue Dec 1: code freeze
 
 - [ ] Only critical fixes from now on.
-- [ ] Actions → **Deploy production** → Run workflow. Copy the URLs from the run summary into README "Try it in 10 seconds" and docs/JUDGE_TESTING.md.
+- [x] Production is live (Nov 22): https://haunt-kit-seance.pages.dev, https://haunt-kit-steady.pages.dev, https://haunt-kit-play.pages.dev. Links are in the README and the judge guide.
+- [ ] After the last merge, run Actions → **Deploy production** again so the live sites match the code, then run the live tests (see docs/DEPLOY.md).
 - [ ] `pnpm check:submission`. Fix everything marked ✗.
 - [ ] Remove the "Team note" block from docs/JUDGE_TESTING.md once every step works.
 

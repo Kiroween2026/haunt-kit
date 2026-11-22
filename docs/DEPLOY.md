@@ -33,7 +33,7 @@ If Cloudflare says a `pages.dev` name is taken, it adds a suffix. Use the URL pr
 
 Never put the token in a file, a commit, or a chat message.
 
-## Production (Tue Dec 1, code freeze)
+## Production (deployed Nov 22, redo on Tue Dec 1 after the code freeze)
 
 ```bash
 pnpm --filter @haunt-kit/relay deploy:production   # needs `wrangler login` once
@@ -61,3 +61,16 @@ When a free limit is hit, further requests of that type fail until 00:00 UTC. No
 | Cloudflare code 9109, "Cannot use the access token from location" | The token has a **Client IP address filtering** list, so it only works from that address.                              | Edit the token and empty the list. Use **Update**, not **Roll**.         |
 | A page URL returns nothing for a minute or two                    | A brand-new `*.pages.dev` address takes a while to appear in DNS.                                                      | Wait. The deploy check retries for 4 minutes.                            |
 | The deploy step is green but pages are missing                    | It used to ignore errors.                                                                                              | Fixed: the step stops on the first error and the check curls every page. |
+
+## Production
+
+| Part             | Address                                                  |
+| ---------------- | -------------------------------------------------------- |
+| Séance Party     | https://haunt-kit-seance.pages.dev                       |
+| Steady           | https://haunt-kit-steady.pages.dev                       |
+| Phone controller | https://haunt-kit-play.pages.dev                         |
+| Relay            | `wss://haunt-kit-relay.yadnesh-deshpande2-1.workers.dev` |
+
+Publish it with Actions → **Deploy production** → Run workflow (from `main`). It runs the tests, deploys the relay, runs the 7-step smoke test on the live relay, deploys the three Pages projects to the production branch, then checks that every page answers. Run it again after the last merge before you submit, so the live sites match the code. Then test it: `LIVE=1 LIVE_PLAY=https://haunt-kit-play.pages.dev/ LIVE_PARTY=https://haunt-kit-seance.pages.dev/ LIVE_STEADY=https://haunt-kit-steady.pages.dev/ pnpm exec playwright test e2e/live.spec.ts`.
+
+The Cloudflare token expires in 30 days. If the deploy fails with an authentication error after that, make a new token and set `CLOUDFLARE_API_TOKEN` again.
