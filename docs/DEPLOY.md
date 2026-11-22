@@ -52,3 +52,12 @@ From https://developers.cloudflare.com/durable-objects/platform/pricing/ (Worker
 | Storage                 | SQLite-backed Durable Objects only | `wrangler.toml` uses `new_sqlite_classes`. Room state is a few KB.                                                      |
 
 When a free limit is hit, further requests of that type fail until 00:00 UTC. Normal judging and playtests stay far below these limits. A long overnight soak test could hit the duration limit, so close test rooms when done. The fallback is the Node relay (`packages/relay/src/node`) on Fly.io.
+
+## What can go wrong (found during the first deploy)
+
+| Error                                                             | Cause                                                                                                                  | Fix                                                                      |
+| ----------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------ |
+| Cloudflare code 7003, "object identifier is invalid"              | The account ID and the API token were pasted into each other's secret. The ID is 32 characters; the token is about 53. | Set each secret again, one at a time.                                    |
+| Cloudflare code 9109, "Cannot use the access token from location" | The token has a **Client IP address filtering** list, so it only works from that address.                              | Edit the token and empty the list. Use **Update**, not **Roll**.         |
+| A page URL returns nothing for a minute or two                    | A brand-new `*.pages.dev` address takes a while to appear in DNS.                                                      | Wait. The deploy check retries for 4 minutes.                            |
+| The deploy step is green but pages are missing                    | It used to ignore errors.                                                                                              | Fixed: the step stops on the first error and the check curls every page. |

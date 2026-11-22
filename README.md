@@ -11,12 +11,13 @@ Built with [Kiro](https://kiro.dev) for the Kiroween 2026 hackathon, **Skeleton 
 
 ## Try it in 10 seconds
 
-|                  | Link                                                              |
-| ---------------- | ----------------------------------------------------------------- |
-| Séance Party     | _staging URL appears after the first deploy (see docs/DEPLOY.md)_ |
-| Steady           | _staging URL_                                                     |
-| Phone controller | _staging URL_                                                     |
-| No phone?        | Open the controller and click **Play without a phone**            |
+| What             | Link                                                                                       |
+| ---------------- | ------------------------------------------------------------------------------------------ |
+| Séance Party     | https://staging.haunt-kit-seance.pages.dev                                                 |
+| Steady           | https://staging.haunt-kit-steady.pages.dev                                                 |
+| Phone controller | https://staging.haunt-kit-play.pages.dev (the QR code in Séance Party opens it)            |
+| Relay            | `wss://haunt-kit-relay-staging.yadnesh-deshpande2-1.workers.dev` (health check: `/health`) |
+| No phone?        | In Séance Party click **Join from this computer**, or in Steady click **Try the demo**     |
 
 Judges: see **[docs/JUDGE_TESTING.md](docs/JUDGE_TESTING.md)** for testing alone, with one phone, or with no phone.
 

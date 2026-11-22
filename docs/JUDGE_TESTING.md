@@ -1,6 +1,10 @@
 # Testing Haunt Kit (for judges)
 
-You don't need friends, an app install or even a phone. Pick the way that fits you. Live links are in the [README](../README.md#try-it-in-10-seconds).
+You don't need friends, an app install or even a phone. Pick the way that fits you. Live links:
+
+- Séance Party: https://staging.haunt-kit-seance.pages.dev
+- Steady: https://staging.haunt-kit-steady.pages.dev
+- Phone controller (the QR code opens it): https://staging.haunt-kit-play.pages.dev
 
 Every step below is one our automated tests run on Safari's engine (WebKit) and Chromium.
 
